@@ -6,6 +6,9 @@ const notFound = require("./middlewares/notFoundMiddleware");
 const errorHandler = require("./middlewares/errorHandlerMiddleware");
 const authRoutes = require("./routes/authRoutes");
 const themeRoutes = require("./routes/themeRoutes");
+const questionRoutes = require("./routes/questionRoutes");
+const quizRoutes = require("./routes/quizRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -26,6 +29,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/themes", themeRoutes);
+app.use("/api/questions", questionRoutes);
+app.use("/api/quiz", quizRoutes);
+app.use("/api/users", userRoutes);
 
 // Error Handling
 app.use(notFound);

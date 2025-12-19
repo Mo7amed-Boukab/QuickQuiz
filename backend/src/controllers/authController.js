@@ -91,7 +91,31 @@ exports.login = async (req, res, next) => {
 // @access  Private
 exports.getMe = async (req, res, next) => {
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user.userId);
+
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+exports.updateProfile = async (req, res, next) => {
+    try {
+        const fieldsToUpdate = {
+            username: req.body.username,
+            email: req.body.email
+        };
+
+        const user = await User.findByIdAndUpdate(req.user.userId, fieldsToUpdate, {
+            new: true,
+            runValidators: true
+        });
 
         res.status(200).json({
             success: true,
