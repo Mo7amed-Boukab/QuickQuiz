@@ -11,7 +11,7 @@ const Header = () => {
     };
     return (
      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-6">
+                <div className="max-w-[1200px] mx-auto px-6">
                     <div className="flex items-center justify-between py-4">
                         <Link to="/" className="flex items-center gap-2">
                             <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">

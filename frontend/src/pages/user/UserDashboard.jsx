@@ -40,7 +40,7 @@ export default function UserDashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-[rgba(0,0,0,0.02)]">
+        <div className="min-h-screen bg-[rgba(0,0,0,0.01)]">
             <Header />
 
             {/* Main Dashboard Content */}
@@ -49,7 +49,7 @@ export default function UserDashboard() {
                     {/* Stats Overview */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
                         {/* Quiz Complétés */}
-                        <div className="bg-white border border-[#e5e5e5] rounded p-9 flex items-center gap-4">
+                        <div className="bg-white border border-[#e5e5e5] rounded p-8 flex items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-[rgba(59,130,246,0.1)] flex items-center justify-center flex-shrink-0">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0a1e3eff" strokeWidth="2">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
