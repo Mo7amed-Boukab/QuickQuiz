@@ -12,6 +12,7 @@ import UsersPage from "../pages/admin/UsersPage";
 import HistoryPage from "../pages/admin/HistoryPage";
 import ExportPage from "../pages/admin/ExportPage";
 import NotFound from "../pages/public/NotFound";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRouter() {
   return (
@@ -20,18 +21,29 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<UserDashboard />} />
-        <Route path="/quiz" element={<Quiz />} />
-        <Route path="/quizlist" element={<QuizList />} />
 
-        <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<Navigate to="questions" replace />} />
-          <Route path="questions" element={<QuestionsPage />} />
-          <Route path="themes" element={<ThemesPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="history" element={<HistoryPage />} />
-          <Route path="export" element={<ExportPage />} />
+        {/* User Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
+          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/quizlist" element={<QuizList />} />
         </Route>
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={<ProtectedRoute allowedRoles={["admin"]} />}
+        >
+          <Route element={<AdminDashboard />}>
+            <Route index element={<Navigate to="questions" replace />} />
+            <Route path="questions" element={<QuestionsPage />} />
+            <Route path="themes" element={<ThemesPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="export" element={<ExportPage />} />
+          </Route>
+        </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import Header from '../../components/Header';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        loginIdentifier: '',
-        password: '',
-        rememberMe: false
+        email: '',
+        password: ''
     });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -18,32 +19,27 @@ export default function Login() {
         e.preventDefault();
         setError('');
 
-        if (!formData.loginIdentifier || !formData.password) {
+        if (!formData.email || !formData.password) {
             setError('Veuillez remplir tous les champs obligatoires.');
             return;
         }
 
         setIsLoading(true);
 
-        setTimeout(() => {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(
-                (u) =>
-                    (u.email === formData.loginIdentifier || u.username === formData.loginIdentifier) &&
-                    u.password === formData.password
-            );
+        try {
+            const response = await login(formData);
 
-            if (user) {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                if (formData.rememberMe) {
-                    localStorage.setItem('rememberUser', JSON.stringify(user));
-                }
-                navigate('/');
+            // Redirect based on role
+            if (response.user.role === 'admin') {
+                navigate('/admin');
             } else {
-                setError("Email/nom d'utilisateur ou mot de passe incorrect.");
-                setIsLoading(false);
+                navigate('/dashboard');
             }
-        }, 1000);
+        } catch (err) {
+            setError(err.response?.data?.error || "Email ou mot de passe incorrect.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -62,20 +58,26 @@ export default function Login() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            {error && (
+                                <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-100 rounded">
+                                    {error}
+                                </div>
+                            )}
+
                             <div>
-                                <label htmlFor="loginIdentifier" className="block text-sm font-small mb-2">
-                                    Email ou nom d'utilisateur
+                                <label htmlFor="email" className="block text-sm font-small mb-2">
+                                    Email
                                 </label>
                                 <input
-                                    type="text"
-                                    id="loginIdentifier"
-                                    value={formData.loginIdentifier}
+                                    type="email"
+                                    id="email"
+                                    value={formData.email}
                                     onChange={(e) => {
-                                        setFormData({ ...formData, loginIdentifier: e.target.value });
+                                        setFormData({ ...formData, email: e.target.value });
                                         setError('');
                                     }}
                                     className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
-                                    placeholder="Entrez votre email ou nom d'utilisateur"
+                                    placeholder="Entrez votre email"
                                     required
                                 />
                             </div>
@@ -88,7 +90,7 @@ export default function Login() {
                                     <input
                                         type={showPassword ? 'text' : 'password'}
                                         id="password"
-                                        value={formData.password}   
+                                        value={formData.password}
                                         onChange={(e) => {
                                             setFormData({ ...formData, password: e.target.value });
                                             setError('');
@@ -100,54 +102,38 @@ export default function Login() {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                                     >
-                                        {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                        {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="rememberMe"
-                                        checked={formData.rememberMe}
-                                        onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
-                                        className="w-4 h-4 border-gray-300 rounded"
-                                    />
-                                    <label htmlFor="rememberMe" className="ml-2 text-sm font-small text-gray-700">
-                                        Se souvenir de moi
-                                    </label>
-                                </div>
-                                <Link to="#" className="text-sm text-black hover:underline">
+                            <div className="flex items-center justify-between text-sm">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" className="rounded border-gray-300" />
+                                    <span className="text-gray-600">Se souvenir de moi</span>
+                                </label>
+                                <a href="#" className="text-sm hover:underline">
                                     Mot de passe oublié ?
-                                </Link>
+                                </a>
                             </div>
-
-                            {error && (
-                                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
-                                    {error}
-                                </div>
-                            )}
 
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full py-2 bg-black text-white rounded font-small hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full py-2 bg-black text-white text-sm rounded font-small hover:bg-gray-800 transition-colors"
                             >
                                 {isLoading ? 'Connexion...' : 'Se connecter'}
                             </button>
-                        </form>
 
-                        <div className="mt-6 text-center text-sm">
-                            <p className="text-gray-600">
+                            <p className="text-center text-sm text-gray-600 mt-6">
                                 Pas encore de compte ?{' '}
-                                <Link to="/register" className="text-black font-small text-sm hover:underline">
-                                    Créer un compte
+                                <Link to="/register" className="text-black font-medium hover:underline">
+                                    S'inscrire
                                 </Link>
                             </p>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </main>

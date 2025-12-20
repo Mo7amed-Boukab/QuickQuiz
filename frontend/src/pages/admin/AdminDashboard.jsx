@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Users, FileText, HelpCircle, Tag } from "lucide-react";
-import AdminHeader from "../../components/admin/AdminHeader";
+import Header from "../../components/Header";
 import StatCard from "../../components/admin/StatCard";
 
 export default function AdminDashboard() {
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-white">
-      <AdminHeader />
+      <Header />
 
       <main className="max-w-[1200px] mx-auto px-6 py-8">
         {/* Stats */}

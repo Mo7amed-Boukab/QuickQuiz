@@ -27,11 +27,15 @@ const importData = async () => {
     await User.create({
       username: "Admin",
       email: "admin@quickquiz.com",
-      password: "adminpassword123", // Will be hashed by pre-save hook
+      password: "admin123", // Will be hashed by pre-save hook
       role: "admin",
     });
-
+    console.log("---------------------------------");
     console.log("Admin user created successfully");
+    console.log("---------------------------------");
+    console.log("email: admin@quickquiz.com");
+    console.log("password: admin123");
+    console.log("---------------------------------");
     process.exit();
   } catch (err) {
     console.error(err);

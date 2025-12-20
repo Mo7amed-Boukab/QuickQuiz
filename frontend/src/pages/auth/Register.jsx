@@ -1,234 +1,272 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
-import Header from '../../components/Header';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import Header from "../../components/Header";
+import { useAuth } from "../../context/AuthContext";
+
 export default function Register() {
-    const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        acceptTerms: false
-    });
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    acceptTerms: false,
+  });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('Veuillez remplir tous les champs obligatoires.');
-            return;
-        }
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      setError("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
 
-        if (!formData.acceptTerms) {
-            setError("Vous devez accepter les conditions d'utilisation.");
-            return;
-        }
+    if (!formData.acceptTerms) {
+      setError("Vous devez accepter les conditions d'utilisation.");
+      return;
+    }
 
-        if (formData.password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères.');
-            return;
-        }
+    if (formData.password.length < 6) {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
 
-        if (formData.password !== formData.confirmPassword) {
-            setError('Les mots de passe ne correspondent pas.');
-            return;
-        }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            setError('Veuillez entrer une adresse email valide.');
-            return;
-        }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Veuillez entrer une adresse email valide.");
+      return;
+    }
 
-        setIsLoading(true);
+    setIsLoading(true);
 
-        setTimeout(() => {
-            const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    try {
+      await register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
 
-            if (existingUsers.find((u) => u.email === formData.email)) {
-                setError('Un utilisateur avec cet email existe déjà.');
-                setIsLoading(false);
-                return;
-            }
+      // Default redirect for new users
+      navigate("/dashboard");
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+          "Une erreur est survenue lors de l'inscription."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            const userData = {
-                fullName: formData.fullName,
-                email: formData.email,
-                password: formData.password,
-                registeredAt: new Date().toISOString()
-            };
+  return (
+    <div className="min-h-screen bg-white">
+      <Header />
+      {/* Main Content */}
+      <main className="py-20">
+        <div className="max-w-lg mx-auto px-6">
+          <div className="bg-white border border-gray-200 rounded-md p-8">
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-2 text-center">
+                Créer un compte
+              </h2>
+              <p className="text-gray-600 text-sm text-center">
+                Rejoignez QuickQuiz pour suivre vos progrès et rivaliser avec
+                d'autres développeurs
+              </p>
+            </div>
 
-            existingUsers.push(userData);
-            localStorage.setItem('users', JSON.stringify(existingUsers));
-            localStorage.setItem('currentUser', JSON.stringify(userData));
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-small mb-2"
+                >
+                  Nom d'utilisateur
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  value={formData.username}
+                  onChange={(e) => {
+                    setFormData({ ...formData, username: e.target.value });
+                    setError("");
+                  }}
+                  className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
+                  placeholder="Entrez votre nom d'utilisateur"
+                  required
+                />
+              </div>
 
-            navigate('/');
-        }, 1500);
-    };
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-small mb-2"
+                >
+                  Adresse email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    setError("");
+                  }}
+                  className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
+                  placeholder="votre@email.com"
+                  required
+                />
+              </div>
 
-    return (
-        <div className="min-h-screen bg-white">
-            <Header />
-            {/* Main Content */}
-            <main className="py-20">
-                <div className="max-w-lg mx-auto px-6">
-                    <div className="bg-white border border-gray-200 rounded-md p-8">
-                        <div className="mb-8">
-                            <h2 className="text-2xl font-semibold mb-2 text-center">Créer un compte</h2>
-                            <p className="text-gray-600 text-sm text-center">
-                                Rejoignez QuickQuiz pour suivre vos progrès et rivaliser avec d'autres développeurs
-                            </p>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label htmlFor="fullName" className="block text-sm font-small mb-2">
-                                    Nom complet
-                                </label>
-                                <input
-                                    type="text"
-                                    id="fullName"
-                                    value={formData.fullName}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, fullName: e.target.value });
-                                        setError('');
-                                    }}
-                                    className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
-                                    placeholder="Entrez votre nom complet"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-small mb-2">
-                                    Adresse email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={formData.email}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, email: e.target.value });
-                                        setError('');
-                                    }}
-                                    className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
-                                    placeholder="votre@email.com"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-small mb-2">
-                                    Mot de passe
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        id="password"
-                                        value={formData.password}
-                                        onChange={(e) => {
-                                            setFormData({ ...formData, password: e.target.value });
-                                            setError('');
-                                        }}
-                                        className="w-full text-sm px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none"
-                                        placeholder="Créez un mot de passe sécurisé"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm hover:text-gray-700"
-                                    >
-                                        {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-small mb-2">
-                                    Confirmer le mot de passe
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        id="confirmPassword"
-                                        value={formData.confirmPassword}
-                                        onChange={(e) => {
-                                            setFormData({ ...formData, confirmPassword: e.target.value });
-                                            setError('');
-                                        }}
-                                        className="w-full text-sm px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none"
-                                        placeholder="Confirmez votre mot de passe"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                    >
-                                        {showConfirmPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="flex items-start">
-                                    <input
-                                        type="checkbox"
-                                        id="acceptTerms"
-                                        checked={formData.acceptTerms}
-                                        onChange={(e) => {
-                                            setFormData({ ...formData, acceptTerms: e.target.checked });
-                                            setError('');
-                                        }}
-                                        className="w-4 h-4 mt-0.5 border-gray-300 rounded"
-                                        required
-                                    />
-                                    <label htmlFor="acceptTerms" className="ml-2 text-sm text-gray-700">
-                                        J'accepte les{' '}
-                                        <Link to="#" className="text-black hover:underline">
-                                            conditions d'utilisation
-                                        </Link>{' '}
-                                        et la{' '}
-                                        <Link to="#" className="text-black hover:underline">
-                                            politique de confidentialité
-                                        </Link>
-                                    </label>
-                                </div>
-                            </div>
-
-                            {error && (
-                                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
-                                    {error}
-                                </div>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-full py-2 bg-black text-white text-sm rounded font-small hover:bg-gray-800 transition-colors"
-                            >
-                                {isLoading ? 'Création du compte...' : 'Créer mon compte'}
-                            </button>
-                        </form>
-
-                        <div className="mt-6 text-center text-sm">
-                            <p className="text-gray-600">
-                                Déjà un compte ?{' '}
-                                <Link to="/login" className="text-black font-medium hover:underline">
-                                    Se connecter
-                                </Link>
-                            </p>
-                        </div>
-                    </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-small mb-2"
+                >
+                  Mot de passe
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={formData.password}
+                    onChange={(e) => {
+                      setFormData({ ...formData, password: e.target.value });
+                      setError("");
+                    }}
+                    className="w-full text-sm px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none"
+                    placeholder="Créez un mot de passe sécurisé"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
+                  </button>
                 </div>
-            </main>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-small mb-2"
+                >
+                  Confirmer le mot de passe
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        confirmPassword: e.target.value,
+                      });
+                      setError("");
+                    }}
+                    className="w-full text-sm px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none"
+                    placeholder="Confirmez votre mot de passe"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-start">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    checked={formData.acceptTerms}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        acceptTerms: e.target.checked,
+                      });
+                      setError("");
+                    }}
+                    className="w-4 h-4 mt-0.5 border-gray-300 rounded"
+                    required
+                  />
+                  <label
+                    htmlFor="acceptTerms"
+                    className="ml-2 text-sm text-gray-700"
+                  >
+                    J'accepte les{" "}
+                    <Link to="#" className="text-black hover:underline">
+                      conditions d'utilisation
+                    </Link>{" "}
+                    et la{" "}
+                    <Link to="#" className="text-black hover:underline">
+                      politique de confidentialité
+                    </Link>
+                  </label>
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-2 bg-black text-white text-sm rounded font-small hover:bg-gray-800 transition-colors"
+              >
+                {isLoading ? "Création du compte..." : "Créer mon compte"}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm">
+              <p className="text-gray-600">
+                Déjà un compte ?{" "}
+                <Link
+                  to="/login"
+                  className="text-black font-medium hover:underline"
+                >
+                  Se connecter
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
-    );
+      </main>
+    </div>
+  );
 }
