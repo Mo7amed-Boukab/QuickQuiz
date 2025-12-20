@@ -1,0 +1,41 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: quiz-app_mongodb
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - quiz-network
+
+  backend:
+    build: ./backend
+    image: quickquiz-backend
+    container_name: quiz-app_backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://mongodb:27017/quiz_app
+      - JWT_SECRET=9ba43a3a7cc772560224db147e43f68b
+    depends_on:
+      - mongodb
+    networks:
+      - quiz-network
+
+  frontend:
+    build: ./frontend
+    image: quickquiz-frontend
+    container_name: quiz-app_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - quiz-network
+
+networks:
+  quiz-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
