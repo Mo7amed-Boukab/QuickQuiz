@@ -9,4 +9,15 @@ const themeSchema = new mongoose.Schema({
   },
 });
 
+// Cascade delete quizzes when a theme is deleted
+themeSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
+  try {
+    const Quiz = require('./quiz');
+    await Quiz.deleteMany({ theme: this._id });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = mongoose.model("Theme", themeSchema);

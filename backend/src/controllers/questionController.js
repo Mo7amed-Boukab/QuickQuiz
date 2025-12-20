@@ -8,13 +8,13 @@ exports.getQuestions = async (req, res, next) => {
   try {
     let query;
 
-    if (req.query.themeId) {
-      query = Question.find({ theme: req.query.themeId });
+    if (req.query.quizId) {
+      query = Question.find({ quiz: req.query.quizId });
     } else {
       query = Question.find();
     }
 
-    const questions = await query.populate("theme", "name");
+    const questions = await query.populate("quiz", "title");
 
     res.status(200).json({
       success: true,
@@ -32,8 +32,8 @@ exports.getQuestions = async (req, res, next) => {
 exports.getQuestion = async (req, res, next) => {
   try {
     const question = await Question.findById(req.params.id).populate(
-      "theme",
-      "name"
+      "quiz",
+      "title"
     );
 
     if (!question) {

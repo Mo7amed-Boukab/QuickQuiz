@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Search, Trash2, Edit } from 'lucide-react';
+import { Search } from 'lucide-react';
 
-export default function QuestionsTable({ questions = [], themes = [], loading, error, onDelete, onEdit }) {
+export default function QuestionsTable({ questions = [], quizzes = [], loading, error, onDelete, onEdit }) {
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterTheme, setFilterTheme] = useState('all');
+    const [filterQuiz, setFilterQuiz] = useState('all');
 
-    const getThemeName = (themeId) => {
-        const theme = themes.find(t => t._id === themeId || t.id === themeId);
-        return theme ? theme.name : 'Thème inconnu';
+    const getQuizTitle = (quizId) => {
+        const quiz = quizzes.find(q => q._id === quizId || q.id === quizId);
+        return quiz ? quiz.title : 'Quiz inconnu';
     };
 
     const handleDelete = (id) => {
@@ -16,9 +16,13 @@ export default function QuestionsTable({ questions = [], themes = [], loading, e
 
     const filteredQuestions = Array.isArray(questions) ? questions.filter(q => {
         const matchesSearch = q.question.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesTheme = filterTheme === 'all' ||
-            (q.theme && (q.theme === filterTheme || q.theme._id === filterTheme));
-        return matchesSearch && matchesTheme;
+        const matchesQuiz = filterQuiz === 'all' ||
+            (q.quiz && (
+                typeof q.quiz === 'object'
+                    ? (q.quiz._id === filterQuiz || q.quiz.id === filterQuiz)
+                    : (q.quiz === filterQuiz)
+            ));
+        return matchesSearch && matchesQuiz;
     }) : [];
 
     if (loading) return <div className="text-center py-4">Chargement...</div>;
@@ -38,14 +42,14 @@ export default function QuestionsTable({ questions = [], themes = [], loading, e
                     />
                 </div>
                 <select
-                    value={filterTheme}
-                    onChange={(e) => setFilterTheme(e.target.value)}
+                    value={filterQuiz}
+                    onChange={(e) => setFilterQuiz(e.target.value)}
                     className="px-4 py-2 border border-[#e5e5e5] rounded text-sm focus:outline-none bg-white min-w-[200px]"
                 >
-                    <option value="all">Tous les thèmes</option>
-                    {themes.map(theme => (
-                        <option key={theme._id || theme.id} value={theme._id || theme.id}>
-                            {theme.name}
+                    <option value="all">Tous les quiz</option>
+                    {quizzes.map(quiz => (
+                        <option key={quiz._id || quiz.id} value={quiz._id || quiz.id}>
+                            {quiz.title}
                         </option>
                     ))}
                 </select>
@@ -58,7 +62,7 @@ export default function QuestionsTable({ questions = [], themes = [], loading, e
                             <tr className="border-b border-[#e5e5e5]">
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-20">ID</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">Question</th>
-                                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">Thème</th>
+                                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">Quiz</th>
                                 <th className="text-right py-3 px-4 text-sm font-medium text-[#737373] w-48">Actions</th>
                             </tr>
                         </thead>
@@ -71,7 +75,7 @@ export default function QuestionsTable({ questions = [], themes = [], loading, e
                                         </td>
                                         <td className="py-3 px-4 text-sm">{q.question}</td>
                                         <td className="py-3 px-4 text-sm text-[#737373]">
-                                            {typeof q.theme === 'object' ? q.theme.name : getThemeName(q.theme)}
+                                            {typeof q.quiz === 'object' ? q.quiz.title : getQuizTitle(q.quiz)}
                                         </td>
                                         <td className="py-3 px-4">
                                             <div className="flex gap-2 justify-end">

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
-  theme: {
+  quiz: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Theme",
+    ref: "Quiz",
     required: true,
   },
   question: {

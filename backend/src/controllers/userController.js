@@ -6,7 +6,8 @@ const ApiError = require("../utils/ApiError");
 // @access  Private/Admin
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
+    // Exclude admin users from the count
+    const users = await User.find({ role: { $ne: "admin" } });
 
     res.status(200).json({
       success: true,

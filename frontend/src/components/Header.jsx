@@ -37,7 +37,7 @@ const Header = () => {
                 {isOnDashboard ? (
                   <Link
                     to="/"
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded hover:bg-gray-50 transition-colors"
                   >
                     <Home className="w-4 h-4" />
                     Home
@@ -45,7 +45,7 @@ const Header = () => {
                 ) : (
                   <Link
                     to={user.role === "admin" ? "/admin" : "/dashboard"}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded hover:bg-gray-50 transition-colors"
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     Dashboard

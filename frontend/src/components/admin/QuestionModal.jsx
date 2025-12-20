@@ -5,11 +5,11 @@ export default function QuestionModal({
     isOpen,
     onClose,
     onSubmit,
-    themes,
+    quizzes, // Changed from themes
     questionToEdit
 }) {
     const [formData, setFormData] = useState({
-        theme: "",
+        quiz: "", // Changed from theme
         question: "",
         answerA: "",
         answerB: "",
@@ -23,10 +23,13 @@ export default function QuestionModal({
             const getAnswer = (idx) => questionToEdit.options && questionToEdit.options[idx] ? questionToEdit.options[idx].text : '';
             const correctIndex = questionToEdit.options ? questionToEdit.options.findIndex(o => o.isCorrect) : -1;
             const correctLetter = correctIndex >= 0 ? ['A', 'B', 'C', 'D'][correctIndex] : '';
-            const themeId = typeof questionToEdit.theme === 'object' ? questionToEdit.theme._id : questionToEdit.theme;
+            // Handle quiz object or id
+            const quizId = questionToEdit.quiz ?
+                (typeof questionToEdit.quiz === 'object' ? questionToEdit.quiz._id : questionToEdit.quiz)
+                : "";
 
             setFormData({
-                theme: themeId || "",
+                quiz: quizId || "",
                 question: questionToEdit.question || "",
                 answerA: getAnswer(0),
                 answerB: getAnswer(1),
@@ -36,7 +39,7 @@ export default function QuestionModal({
             });
         } else {
             setFormData({
-                theme: "",
+                quiz: "",
                 question: "",
                 answerA: "",
                 answerB: "",
@@ -50,7 +53,7 @@ export default function QuestionModal({
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
-            theme: formData.theme,
+            quiz: formData.quiz, // Changed from theme
             question: formData.question,
             options: [
                 { text: formData.answerA, isCorrect: formData.correctAnswer === 'A' },
@@ -62,7 +65,7 @@ export default function QuestionModal({
 
         onSubmit(payload);
         setFormData({
-            theme: "",
+            quiz: "",
             question: "",
             answerA: "",
             answerB: "",
@@ -100,20 +103,20 @@ export default function QuestionModal({
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="p-6">
-                        {/* Theme Selection */}
+                        {/* Quiz Selection */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium mb-2">Thème</label>
+                            <label className="block text-sm font-medium mb-2">Quiz</label>
                             <div className="relative">
                                 <select
-                                    value={formData.theme}
-                                    onChange={(e) => handleChange("theme", e.target.value)}
+                                    value={formData.quiz}
+                                    onChange={(e) => handleChange("quiz", e.target.value)}
                                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none appearance-none text-sm bg-white"
                                     required
                                 >
-                                    <option value="">Sélectionnez un thème</option>
-                                    {themes.map((theme) => (
-                                        <option key={theme._id || theme.id} value={theme._id || theme.id}>
-                                            {theme.name}
+                                    <option value="">Sélectionnez un quiz</option>
+                                    {quizzes.map((quiz) => (
+                                        <option key={quiz._id || quiz.id} value={quiz._id || quiz.id}>
+                                            {quiz.title}
                                         </option>
                                     ))}
                                 </select>

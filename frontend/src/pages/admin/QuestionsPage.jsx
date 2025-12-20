@@ -3,13 +3,13 @@ import QuestionTable from "../../components/admin/QuestionTable";
 import QuestionModal from "../../components/admin/QuestionModal";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { getQuestions, createQuestion, deleteQuestion, updateQuestion } from "../../services/questionService";
-import { getThemes } from "../../services/themeService";
+import { getQuizzes } from "../../services/quizService";
 
 export default function QuestionsPage() {
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
 
   const [questions, setQuestions] = useState([]);
-  const [themes, setThemes] = useState([]);
+  const [quizzes, setQuizzes] = useState([]); // Changed from themes to quizzes
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,18 +20,17 @@ export default function QuestionsPage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [questionsData, themesData] = await Promise.all([
+      const [questionsData, quizzesData] = await Promise.all([
         getQuestions(),
-        getThemes()
+        getQuizzes()
       ]);
 
       if (Array.isArray(questionsData)) setQuestions(questionsData);
       else if (questionsData.data && Array.isArray(questionsData.data)) setQuestions(questionsData.data);
       else setQuestions([]);
 
-      if (Array.isArray(themesData)) setThemes(themesData);
-      else if (themesData.data && Array.isArray(themesData.data)) setThemes(themesData.data);
-      else setThemes([]);
+      const quizList = Array.isArray(quizzesData) ? quizzesData : (quizzesData.data || []);
+      setQuizzes(quizList);
 
       setError(null);
     } catch (err) {
@@ -107,7 +106,7 @@ export default function QuestionsPage() {
 
       <QuestionTable
         questions={questions}
-        themes={themes}
+        quizzes={quizzes} // Renamed prop
         loading={loading}
         error={error}
         onDelete={handleDeleteClick}
@@ -118,7 +117,7 @@ export default function QuestionsPage() {
         isOpen={isQuestionModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleCreateOrUpdateQuestion}
-        themes={themes}
+        quizzes={quizzes} // Renamed prop
         questionToEdit={questionToEdit}
       />
 

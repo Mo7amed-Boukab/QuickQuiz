@@ -6,6 +6,7 @@ import StatCard from "../../components/admin/StatCard";
 import { getUsers } from "../../services/userService";
 import { getThemes } from "../../services/themeService";
 import { getQuestions } from "../../services/questionService";
+import { getQuizzes } from "../../services/quizService";
 
 export default function AdminDashboard() {
     const location = useLocation();
@@ -21,10 +22,11 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const [usersResponse, themesResponse, questionsResponse] = await Promise.all([
+                const [usersResponse, themesResponse, questionsResponse, quizzesResponse] = await Promise.all([
                     getUsers(),
                     getThemes(),
-                    getQuestions()
+                    getQuestions(),
+                    getQuizzes()
                 ]);
 
                 const getCount = (res) => {
@@ -36,12 +38,13 @@ export default function AdminDashboard() {
                 const userCount = getCount(usersResponse);
                 const themeCount = getCount(themesResponse);
                 const questionCount = getCount(questionsResponse);
+                const quizCount = getCount(quizzesResponse);
 
                 setCounts({
                     users: userCount,
                     themes: themeCount,
                     questions: questionCount,
-                    quizzes: themeCount
+                    quizzes: quizCount
                 });
 
             } catch (error) {
