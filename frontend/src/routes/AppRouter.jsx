@@ -26,7 +26,7 @@ export default function AppRouter() {
                 {/* User Routes */}
                 <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
                     <Route path="/dashboard" element={<UserDashboard />} />
-                    <Route path="/quiz" element={<Quiz />} />
+                    <Route path="/quiz/:quizId" element={<Quiz />} />
                     <Route path="/quizlist" element={<QuizList />} />
                 </Route>
 

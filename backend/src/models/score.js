@@ -25,12 +25,42 @@ const scoreSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Question",
       },
+      selectedOption: {
+        type: Number,
+        default: -1,
+      },
       isCorrect: {
         type: Boolean,
         required: true,
       },
     },
   ],
+  correctCount: {
+    type: Number,
+    default: 0,
+  },
+  timeLimitSeconds: {
+    type: Number,
+    default: 0,
+  },
+  timeTakenSeconds: {
+    type: Number,
+    default: 0,
+  },
+  quizMetadata: {
+    title: {
+      type: String,
+    },
+    themeName: {
+      type: String,
+    },
+    difficulty: {
+      type: String,
+    },
+    timeLimitMinutes: {
+      type: Number,
+    },
+  },
   playedAt: {
     type: Date,
     default: Date.now,
