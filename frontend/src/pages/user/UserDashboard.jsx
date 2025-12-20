@@ -319,7 +319,10 @@ export default function UserDashboard() {
                 <p className="text-[#737373] text-sm">Réviser vos erreurs</p>
               </Link>
 
-              <button className="bg-white border border-[#e5e5e5] rounded p-6 text-center cursor-pointer transition-all hover:-translate-y-0.5">
+              <Link
+                to="/achievements"
+                className="bg-white border border-[#e5e5e5] rounded p-6 text-center cursor-pointer transition-all hover:-translate-y-0.5 no-underline text-inherit block"
+              >
                 <div className="w-12 h-12 bg-[rgba(26,26,26,0.1)] rounded-full flex items-center justify-center mx-auto mb-4 text-[#1a1a1a]">
                   <svg
                     width="24"
@@ -339,7 +342,7 @@ export default function UserDashboard() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Réalisations</h3>
                 <p className="text-[#737373] text-sm">Voir vos badges</p>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

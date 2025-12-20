@@ -6,6 +6,7 @@ import UserDashboard from "../pages/user/UserDashboard";
 import Quiz from "../pages/user/Quiz";
 import QuizList from "../pages/user/QuizList";
 import PracticeMode from "../pages/user/PracticeMode";
+import Achievements from "../pages/user/Achievements";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import QuizPage from "../pages/admin/QuizPage";
 import QuestionsPage from "../pages/admin/QuestionsPage";
@@ -30,6 +31,7 @@ export default function AppRouter() {
           <Route path="/quiz/:quizId" element={<Quiz />} />
           <Route path="/quizlist" element={<QuizList />} />
           <Route path="/practice" element={<PracticeMode />} />
+          <Route path="/achievements" element={<Achievements />} />
         </Route>
 
         {/* Admin Routes */}

@@ -137,7 +137,7 @@ export default function PracticeMode() {
         <div className="max-w-4xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 mb-4">
                 Basé sur vos erreurs récentes
               </p>
               <h1 className="text-3xl font-semibold text-gray-900">
@@ -145,14 +145,14 @@ export default function PracticeMode() {
               </h1>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500">Progression</div>
-              <div className="text-xl font-semibold text-gray-900">
+              <div className="text-sm text-gray-500 mb-4">Progression</div>
+              <div className="text-xl font-medium text-gray-900">
                 {progress}%
               </div>
             </div>
           </div>
 
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-6">
+          <div className="h-2 bg-gray-200 overflow-hidden mb-6">
             <div
               className="h-full bg-black transition-all duration-300"
               style={{ width: `${progress}%` }}
