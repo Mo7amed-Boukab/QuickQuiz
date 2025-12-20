@@ -14,3 +14,8 @@ export const getMyHistory = async () => {
   const response = await api.get("/quiz/my-history");
   return response.data;
 };
+
+export const getQuizStats = async () => {
+  const response = await api.get("/quiz/stats");
+  return response.data;
+};

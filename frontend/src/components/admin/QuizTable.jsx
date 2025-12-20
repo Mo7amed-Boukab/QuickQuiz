@@ -1,19 +1,15 @@
 import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Trophy, Users, HelpCircle } from 'lucide-react';
 
-export default function QuestionsTable() {
+export default function QuizTable({ stats = [], loading, error }) {
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterQuiz, setFilterQuiz] = useState('all');
 
-    const questions = [
-        { id: 1, question: 'How do you write "Hello World" in an alert box?', quiz: 'JavaScript Basics' },
-        { id: 2, question: 'What is npm?', quiz: 'Node.js' },
-        { id: 3, question: 'Which SQL statement is used to extract data from a database?', quiz: 'Database MySQL' }
-    ];
-
-    const filteredQuestions = questions.filter(q =>
-        q.question.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredStats = stats.filter(item =>
+        item.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    if (loading) return <div className="text-center py-4">Chargement...</div>;
+    if (error && stats.length === 0) return <div className="text-center py-4 text-red-500">{error}</div>;
 
     return (
         <div>
@@ -28,16 +24,6 @@ export default function QuestionsTable() {
                         className="w-full pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
                     />
                 </div>
-                <select
-                    value={filterQuiz}
-                    onChange={(e) => setFilterQuiz(e.target.value)}
-                    className="px-4 py-2 border border-[#e5e5e5] rounded text-sm focus:outline-none bg-white min-w-[200px]"
-                >
-                    <option value="all">Tous les quiz</option>
-                    <option value="js">JavaScript Basics</option>
-                    <option value="node">Node.js</option>
-                    <option value="mysql">Database MySQL</option>
-                </select>
             </div>
 
             <div className="bg-white border border-[#e5e5e5] rounded overflow-hidden">
@@ -45,30 +31,41 @@ export default function QuestionsTable() {
                     <table className="w-full">
                         <thead className="bg-[#f9fafb]">
                             <tr className="border-b border-[#e5e5e5]">
-                                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-20">ID</th>
-                                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">Questions</th>
-                                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">Quiz</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-[#737373] w-48">Actions</th>
+                                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">Quiz</th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373]">
+                                    <div className="flex items-center justify-center gap-1">
+                                        <HelpCircle className="w-4 h-4" /> Questions
+                                    </div>
+                                </th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373]">
+                                    <div className="flex items-center justify-center gap-1">
+                                        <Trophy className="w-4 h-4" /> Parties Jouées
+                                    </div>
+                                </th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373]">
+                                    <div className="flex items-center justify-center gap-1">
+                                        <Users className="w-4 h-4" /> Joueurs Uniques
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredQuestions.map((q) => (
-                                <tr key={q.id} className="border-b border-[#e5e5e5] last:border-0 hover:bg-[rgba(0,0,0,0.02)] transition-colors">
-                                    <td className="py-3 px-4 text-sm">{q.id}</td>
-                                    <td className="py-3 px-4 text-sm">{q.question}</td>
-                                    <td className="py-3 px-4 text-sm text-[#737373]">{q.quiz}</td>
-                                    <td className="py-3 px-4">
-                                        <div className="flex gap-2 justify-end">
-                                            <button className="px-3 py-1 text-xs border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] transition-colors">
-                                                Modifier
-                                            </button>
-                                            <button className="px-3 py-1 text-xs border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] transition-colors">
-                                                Supprimer
-                                            </button>
-                                        </div>
+                            {filteredStats.length > 0 ? (
+                                filteredStats.map((item) => (
+                                    <tr key={item._id} className="border-b border-[#e5e5e5] last:border-0 hover:bg-[rgba(0,0,0,0.02)] transition-colors">
+                                        <td className="py-3 px-4 text-sm²²²²²²²²²²²²">{item.name}</td>
+                                        <td className="py-3 px-4 text-sm text-center">{item.questionCount}</td>
+                                        <td className="py-3 px-4 text-sm text-center">{item.playCount}</td>
+                                        <td className="py-3 px-4 text-sm text-center">{item.uniqueUsers}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="py-8 text-center text-gray-500 text-sm">
+                                        Aucun quiz trouvé
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

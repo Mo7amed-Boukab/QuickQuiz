@@ -1,4 +1,6 @@
 const Score = require("../models/score");
+const Theme = require("../models/theme");
+const Question = require("../models/question");
 const ApiError = require("../utils/ApiError");
 
 // @desc    Submit a quiz score
@@ -58,6 +60,38 @@ exports.getUserHistory = async (req, res, next) => {
       success: true,
       count: history.length,
       data: history,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get aggregated quiz stats
+// @route   GET /api/quiz/stats
+// @access  Private/Admin
+exports.getQuizStats = async (req, res, next) => {
+  try {
+    const themes = await Theme.find().lean();
+
+    const stats = await Promise.all(themes.map(async (theme) => {
+      const questionCount = await Question.countDocuments({ theme: theme._id });
+      const playCount = await Score.countDocuments({ theme: theme._id });
+      // Count unique users who played this quiz
+      const uniqueUsers = (await Score.distinct('user', { theme: theme._id })).length;
+
+      return {
+        _id: theme._id,
+        name: theme.name,
+        questionCount,
+        playCount,
+        uniqueUsers
+      };
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: stats.length,
+      data: stats,
     });
   } catch (error) {
     next(error);
