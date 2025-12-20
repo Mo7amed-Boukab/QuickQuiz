@@ -38,7 +38,7 @@ export default function ThemesTable({ themes, loading, error, onDelete, onEdit }
                             <tr className="border-b border-[#e5e5e5]">
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-20">ID</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">Nom</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-[#737373] w-48">Actions</th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373] w-48">Actions</th>
                             </tr>
                         </thead>
                         <tbody>

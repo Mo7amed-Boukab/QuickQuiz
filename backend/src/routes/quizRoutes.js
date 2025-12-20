@@ -16,6 +16,12 @@ const router = express.Router();
 
 router.use(authenticate);
 
+// Other quiz actions
+router.post("/submit", submitQuiz);
+router.get("/my-history", getUserHistory);
+router.get("/history", authorize("admin"), getAllHistory);
+router.get("/stats", authorize("admin"), getQuizStats);
+
 // Quiz CRUD routes
 router.route("/")
   .get(getQuizzes)
@@ -25,11 +31,5 @@ router.route("/:id")
   .get(getQuiz)
   .put(authorize("admin"), updateQuiz)
   .delete(authorize("admin"), deleteQuiz);
-
-// Other quiz actions
-router.post("/submit", submitQuiz);
-router.get("/my-history", getUserHistory);
-router.get("/history", authorize("admin"), getAllHistory);
-router.get("/stats", authorize("admin"), getQuizStats);
 
 module.exports = router;

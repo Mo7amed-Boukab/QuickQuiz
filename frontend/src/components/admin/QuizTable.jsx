@@ -52,8 +52,7 @@ export default function QuizTable({ quizzes = [], loading, error, onEdit, onDele
                                         <HelpCircle className="w-4 h-4" /> Questions
                                     </div>
                                 </th>
-                                <th className="text-right py-3 px-4 text-sm font-med
-                                ium text-[#737373]">Actions</th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373]">Actions</th>
                             </tr>
                         </thead>
                         <tbody>

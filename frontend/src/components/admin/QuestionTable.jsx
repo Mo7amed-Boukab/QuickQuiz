@@ -63,7 +63,7 @@ export default function QuestionsTable({ questions = [], quizzes = [], loading, 
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-20">ID</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">Question</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">Quiz</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-[#737373] w-48">Actions</th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373] w-48">Actions</th>
                             </tr>
                         </thead>
                         <tbody>

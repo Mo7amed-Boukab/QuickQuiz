@@ -92,7 +92,7 @@ export default function UsersTable() {
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">Email</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-32">Role</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">Inscrit le</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-[#737373] w-32">Actions</th>
+                                <th className="text-center py-3 px-4 text-sm font-medium text-[#737373] w-32">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
