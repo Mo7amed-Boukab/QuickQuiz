@@ -7,37 +7,97 @@ export default function UserDashboard() {
         totalQuizzes: 0,
         averageScore: 0,
         totalTime: 0,
-        bestStreak: 0
+        bestStreak: 0,
     });
+    const [leaderboard, setLeaderboard] = useState([]);
 
-    useEffect(() => {
+    const syncStats = () => {
         const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
 
-        if (history.length > 0) {
-            const total = history.length;
-            const avgScore = Math.round(
-                history.reduce((acc, h) => acc + (h.score / h.totalQuestions) * 100, 0) / total
-            );
-            const totalTime = Math.round(
-                history.reduce((acc, h) => acc + (h.timeElapsed || 0), 0) / 60
-            );
-
-            setStats({
-                totalQuizzes: total,
-                averageScore: avgScore,
-                totalTime: totalTime,
-                bestStreak: 0
-            });
+        if (!history.length) {
+            setStats({ totalQuizzes: 0, averageScore: 0, totalTime: 0, bestStreak: 0 });
+            setLeaderboard([]);
+            return;
         }
-    }, []);
 
-    const leaderboard = [
-        { rank: 1, name: 'Alexandre Martin', stats: '25 quiz complétés • 94% de moyenne', score: '3,250 pts' },
-        { rank: 2, name: 'Sophie Laurent', stats: '22 quiz complétés • 91% de moyenne', score: '2,980 pts' },
-        { rank: 3, name: 'Thomas Dubois', stats: '20 quiz complétés • 89% de moyenne', score: '2,750 pts' },
-        { rank: 4, name: 'Marie Rousseau', stats: '18 quiz complétés • 87% de moyenne', score: '2,640 pts' },
-        { rank: 5, name: 'Lucas Bernard', stats: '16 quiz complétés • 85% de moyenne', score: '2,520 pts' }
-    ];
+        const total = history.length;
+        const avgScore = Math.round(
+            history.reduce((acc, h) => {
+                const maxPoints = (h.totalQuestions || 0) * 10 || 1;
+                return acc + (h.score / maxPoints) * 100;
+            }, 0) / total
+        );
+        const totalTimeSeconds = history.reduce((acc, h) => acc + (h.timeTakenSeconds || h.timeElapsed || 0), 0);
+        const totalTime = Math.round(totalTimeSeconds / 60);
+
+        const sorted = [...history].sort((a, b) => new Date(a.date) - new Date(b.date));
+        let streak = 0;
+        let bestStreak = 0;
+        sorted.forEach((item) => {
+            if (item.score > 0) {
+                streak += 1;
+                bestStreak = Math.max(bestStreak, streak);
+            } else {
+                streak = 0;
+            }
+        });
+
+        setStats({
+            totalQuizzes: total,
+            averageScore: avgScore,
+            totalTime,
+            bestStreak,
+        });
+
+        const aggregates = history.reduce((acc, item) => {
+            const name = item.userName || 'Anonyme';
+            const maxPoints = (item.totalQuestions || 0) * 10 || 1;
+            const percent = (item.score / maxPoints) * 100;
+
+            if (!acc[name]) {
+                acc[name] = { count: 0, totalPercent: 0, totalScore: 0 };
+            }
+            acc[name].count += 1;
+            acc[name].totalPercent += percent;
+            acc[name].totalScore += item.score;
+            return acc;
+        }, {});
+
+        const top = Object.entries(aggregates)
+            .map(([name, data]) => {
+                const avgPercent = Math.round(data.totalPercent / data.count);
+                const statsText = `${data.count} quiz complétés • ${avgPercent}% de moyenne`;
+                const scoreLabel = `${data.totalScore} pts`;
+                return { name, stats: statsText, score: scoreLabel, avgPercent };
+            })
+            .sort((a, b) => b.avgPercent - a.avgPercent)
+            .slice(0, 5)
+            .map((entry, idx) => ({ ...entry, rank: idx + 1 }));
+
+        setLeaderboard(top);
+    };
+
+    useEffect(() => {
+        syncStats();
+
+        const onStorage = (event) => {
+            if (event.key === 'quizHistory') {
+                syncStats();
+            }
+        };
+
+        const onCustom = () => syncStats();
+
+        window.addEventListener('storage', onStorage);
+        window.addEventListener('focus', onCustom);
+        window.addEventListener('quizHistoryUpdated', onCustom);
+
+        return () => {
+            window.removeEventListener('storage', onStorage);
+            window.removeEventListener('focus', onCustom);
+            window.removeEventListener('quizHistoryUpdated', onCustom);
+        };
+    }, []);
 
     return (
         <div className="min-h-screen bg-[rgba(0,0,0,0.01)]">
