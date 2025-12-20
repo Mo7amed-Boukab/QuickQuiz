@@ -1,23 +1,91 @@
+import { useState, useEffect } from "react";
 import ThemesTable from "../../components/admin/ThemesTable";
-import AddThemeModal from "../../components/admin/AddThemeModal";
-import { useState } from "react";
+import ThemeModal from "../../components/admin/ThemeModal";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
+import { getThemes, createTheme, deleteTheme, updateTheme } from "../../services/themeService";
 
 export default function ThemesPage() {
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
-  const [themes, setThemes] = useState([
-    { id: 1, name: "theme 1", questions: 10 },
-    { id: 2, name: "theme 2", questions: 15 },
-    { id: 3, name: "theme 3", questions: 20 },
-  ]);
+  const [themes, setThemes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleAddTheme = (themeData) => {
-    const newTheme = {
-      id: themes.length + 1,
-      name: themeData.name,
-      questions: 0,
-    };
-    setThemes([...themes, newTheme]);
-    console.log("New theme added:", newTheme);
+  // Delete modal state
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [themeToDelete, setThemeToDelete] = useState(null);
+
+  const fetchThemes = async () => {
+    try {
+      setLoading(true);
+      const data = await getThemes();
+      // Ensure data is array
+      if (Array.isArray(data)) {
+        setThemes(data);
+      } else if (data.data && Array.isArray(data.data)) {
+        setThemes(data.data);
+      } else {
+        setThemes([]);
+        console.error("Format de thèmes inattendu:", data);
+      }
+      setError(null);
+    } catch (err) {
+      setError("Erreur lors du chargement des thèmes");
+      console.error(err);
+      setThemes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchThemes();
+  }, []);
+
+  // Edit modal state 
+  const [themeToEdit, setThemeToEdit] = useState(null);
+
+  const handleCreateOrUpdateTheme = async (themeData) => {
+    try {
+      if (themeToEdit) {
+        await updateTheme(themeToEdit._id, themeData);
+      } else {
+        await createTheme(themeData);
+      }
+      fetchThemes();
+      setError(null);
+      handleCloseModal();
+    } catch (err) {
+      console.error("Erreur save thème:", err);
+    }
+  };
+
+  const handleEditClick = (theme) => {
+    setThemeToEdit(theme);
+    setIsThemeModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsThemeModalOpen(false);
+    setThemeToEdit(null);
+  };
+
+  const handleDeleteClick = (id) => {
+    const theme = themes.find(t => t._id === id);
+    if (theme) {
+      setThemeToDelete(theme);
+      setIsDeleteModalOpen(true);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!themeToDelete) return;
+    try {
+      await deleteTheme(themeToDelete._id);
+      setThemes(themes.filter((t) => t._id !== themeToDelete._id));
+      setThemeToDelete(null);
+    } catch (err) {
+      console.error("Erreur suppression thème:", err);
+    }
   };
 
   return (
@@ -25,18 +93,37 @@ export default function ThemesPage() {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-medium">Gestion des Thèmes</h2>
         <button
-          onClick={() => setIsThemeModalOpen(true)}
+          onClick={() => {
+            setThemeToEdit(null);
+            setIsThemeModalOpen(true);
+          }}
           className="px-4 py-2 bg-[#1a1a1a] text-white rounded text-sm hover:bg-[#000] transition-colors"
         >
           + Nouveau Thème
         </button>
       </div>
-      <ThemesTable />
 
-      <AddThemeModal
+      <ThemesTable
+        themes={themes}
+        loading={loading}
+        error={error}
+        onDelete={handleDeleteClick}
+        onEdit={handleEditClick}
+      />
+
+      <ThemeModal
         isOpen={isThemeModalOpen}
-        onClose={() => setIsThemeModalOpen(false)}
-        onSubmit={handleAddTheme}
+        onClose={handleCloseModal}
+        onSubmit={handleCreateOrUpdateTheme}
+        themeToEdit={themeToEdit}
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Supprimer le thème"
+        message={`Êtes-vous sûr de vouloir supprimer le thème "${themeToDelete?.title || themeToDelete?.name}" ? Cette action est irréversible.`}
       />
     </>
   );

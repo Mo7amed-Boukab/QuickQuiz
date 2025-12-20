@@ -14,3 +14,8 @@ export const deleteTheme = async (id) => {
   const response = await api.delete(`/themes/${id}`);
   return response.data;
 };
+
+export const updateTheme = async (id, themeData) => {
+  const response = await api.put(`/themes/${id}`, themeData);
+  return response.data;
+};

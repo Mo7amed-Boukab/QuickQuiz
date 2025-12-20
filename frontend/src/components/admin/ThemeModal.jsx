@@ -1,15 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
-export default function AddThemeModal({ isOpen, onClose, onSubmit }) {
-    const [themeName, setThemeName] = useState('');
+export default function ThemeModal({ isOpen, onClose, onSubmit, themeToEdit }) {
+    const [name, setName] = useState('');
+
+    useEffect(() => {
+        if (themeToEdit) {
+            setName(themeToEdit.name);
+        } else {
+            setName('');
+        }
+    }, [themeToEdit, isOpen]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (themeName.trim()) {
-            onSubmit({ name: themeName });
-            setThemeName('');
-            onClose();
+        if (name.trim()) {
+            onSubmit({ name });
+            setName('');
         }
     };
 
@@ -21,8 +28,12 @@ export default function AddThemeModal({ isOpen, onClose, onSubmit }) {
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-[#e5e5e5]">
                     <div>
-                        <h2 className="text-xl font-medium">Ajouter un nouveau thème</h2>
-                        <p className="text-sm text-[#737373] mt-1">Créez un nouveau thème pour vos quiz</p>
+                        <h2 className="text-xl font-medium">
+                            {themeToEdit ? 'Modifier le thème' : 'Ajouter un nouveau thème'}
+                        </h2>
+                        <p className="text-sm text-[#737373] mt-1">
+                            {themeToEdit ? 'Modifiez les informations du thème' : 'Créez un nouveau thème pour vos quiz'}
+                        </p>
                     </div>
                     <button
                         onClick={onClose}
@@ -40,8 +51,8 @@ export default function AddThemeModal({ isOpen, onClose, onSubmit }) {
                         </label>
                         <input
                             type="text"
-                            value={themeName}
-                            onChange={(e) => setThemeName(e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             placeholder="Ex: JavaScript Basics"
                             className="w-full px-4 py-2 border border-gray-300 focus:outline-none rounded text-sm"
                             required
@@ -59,9 +70,9 @@ export default function AddThemeModal({ isOpen, onClose, onSubmit }) {
                         </button>
                         <button
                             type="submit"
-                            className="flex-1 px-4 py-2 bg-[#1a1a1a] text-white rounded hover:bg-black transition-colors text-sm"
+                            className="flex-1 px-4 py-2 bg-[#1a1a1a] text-white text-sm rounded hover:bg-black transition-colors"
                         >
-                            Créer le thème
+                            {themeToEdit ? 'Enregistrer' : 'Créer le thème'}
                         </button>
                     </div>
                 </form>

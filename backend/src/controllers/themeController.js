@@ -57,3 +57,28 @@ exports.deleteTheme = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Update theme
+// @route   PUT /api/themes/:id
+// @access  Private/Admin
+exports.updateTheme = async (req, res, next) => {
+  try {
+    const theme = await Theme.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!theme) {
+      return next(
+        new ApiError(404, `Theme not found with id of ${req.params.id}`)
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      data: theme,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
