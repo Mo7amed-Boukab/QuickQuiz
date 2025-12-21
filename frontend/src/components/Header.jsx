@@ -1,21 +1,26 @@
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, LogOut, Home } from "lucide-react";
+import { LayoutDashboard, LogOut, Home, Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     navigate("/login");
+    setIsMenuOpen(false);
   };
 
   const isOnDashboard =
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/admin");
   const isAdminRoute = location.pathname.startsWith("/admin");
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
@@ -31,7 +36,21 @@ const Header = () => {
               </span>
             )}
           </Link>
-          <div className="flex items-center gap-3">
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-gray-600 hover:text-gray-900"
+            onClick={toggleMenu}
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
                 {isOnDashboard ? (
@@ -78,6 +97,60 @@ const Header = () => {
             )}
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-100 flex flex-col gap-3">
+            {user ? (
+              <>
+                {isOnDashboard ? (
+                  <Link
+                    to="/"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded hover:bg-gray-50 transition-colors"
+                  >
+                    <Home className="w-4 h-4" />
+                    Home
+                  </Link>
+                ) : (
+                  <Link
+                    to={user.role === "admin" ? "/admin" : "/dashboard"}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded hover:bg-gray-50 transition-colors"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </Link>
+                )}
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded hover:bg-gray-50 transition-colors w-full justify-start"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="px-4 py-2 text-sm font-medium border border-gray-200 rounded hover:bg-gray-50 transition-colors text-center"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="px-4 py-2 text-sm font-medium bg-black text-white rounded hover:bg-gray-800 transition-colors text-center"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

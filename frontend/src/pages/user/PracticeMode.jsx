@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
+import Loader from "../../components/common/Loader";
 import { getQuestions } from "../../services/questionService";
 
 export default function PracticeMode() {
@@ -123,9 +124,7 @@ export default function PracticeMode() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center text-gray-600">
-          Chargement du mode pratique...
-        </div>
+        <Loader text="Chargement du mode pratique..." />
       </div>
     );
   }

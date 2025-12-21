@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowRight, CheckCircle, Clock, Clock as ClockIcon, RotateCcw, Star, Trophy } from 'lucide-react';
+import Loader from "../../components/common/Loader";
 import { getQuestions } from '../../services/questionService';
 import { getQuizzes, submitQuiz } from '../../services/quizService';
 
@@ -120,9 +121,7 @@ export default function Quiz() {
     if (loading) {
         return (
             <div className="min-h-screen bg-white flex items-center justify-center">
-                <div className="text-center">
-                    <div className="text-xl text-gray-600">Chargement du quiz...</div>
-                </div>
+                <Loader text="Chargement du quiz..." />
             </div>
         );
     }

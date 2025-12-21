@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import Loader from "../common/Loader";
 import { getHistory } from "../../services/quizService";
 
 export default function HistoryTable() {
@@ -54,9 +55,7 @@ export default function HistoryTable() {
 
   return (
     <div className="bg-white border border-[#e5e5e5] rounded overflow-hidden">
-      {loading && (
-        <div className="p-6 text-sm text-[#737373]">Chargement...</div>
-      )}
+      {loading && <Loader text="Chargement de l'historique..." />}
 
       {!loading && error && (
         <div className="p-6 text-sm text-red-600">{error}</div>

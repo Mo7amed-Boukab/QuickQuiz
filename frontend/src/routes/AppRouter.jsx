@@ -40,7 +40,7 @@ export default function AppRouter() {
           element={<ProtectedRoute allowedRoles={["admin"]} />}
         >
           <Route element={<AdminDashboard />}>
-            <Route index element={<Navigate to="questions" replace />} />
+            <Route index element={<Navigate to="quiz" replace />} />
             <Route path="questions" element={<QuestionsPage />} />
             <Route path="themes" element={<ThemesPage />} />
             <Route path="quiz" element={<QuizPage />} />

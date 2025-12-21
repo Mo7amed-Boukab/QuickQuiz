@@ -1,7 +1,20 @@
 import { Users, CheckCircle, BarChart3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/Header";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleStartLearning = () => {
+    if (user) {
+      navigate("/quizlist");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {/* Header */}
@@ -9,7 +22,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative flex-1 py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-600 opacity-5"></div>
+        <div className="absolute inset-0  adient-to-br from-gray-900 to-gray-600 opacity-5"></div>
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Master Web Development
@@ -49,12 +62,8 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() =>
-              document
-                .querySelector("#quizzes")
-                .scrollIntoView({ behavior: "smooth" })
-            }
-            className="inline-flex items-center gap-2 px-8 py-2.5 bg-black text-white rounded font-small hover:bg-gray-800 transition-colors"
+            onClick={handleStartLearning}
+            className="inline-flex items-center gap-2 px-8 py-2.5 bg-black text-white rounded font-small hover:bg-gray-800 transition-colors cursor-pointer"
           >
             Start Learning
           </button>
