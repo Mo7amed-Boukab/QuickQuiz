@@ -10,10 +10,14 @@ const {
   getUserHistory,
   getQuizStats,
   getLeaderboard,
+  getGlobalStats,
 } = require("../controllers/quizController");
 const { authenticate, authorize } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
+
+// Public routes
+router.get("/global-stats", getGlobalStats);
 
 router.use(authenticate);
 

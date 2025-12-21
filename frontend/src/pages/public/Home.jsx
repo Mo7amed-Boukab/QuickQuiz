@@ -2,10 +2,31 @@ import { Users, CheckCircle, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/Header";
+import { useEffect, useState } from "react";
+import { getGlobalStats } from "../../services/quizService";
 
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [stats, setStats] = useState({
+    usersCount: 0,
+    quizzesCompleted: 0,
+    successRate: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await getGlobalStats();
+        if (response.success) {
+          setStats(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch global stats", error);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const handleStartLearning = () => {
     if (user) {
@@ -41,21 +62,21 @@ export default function Home() {
             <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-3">
               <Users className="w-5 h-5 text-gray-900" />
               <div className="text-left">
-                <div className="font-semibold">12,000+</div>
+                <div className="font-semibold">{stats.usersCount}+</div>
                 <div className="text-sm text-gray-600">Active Learners</div>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-3">
               <CheckCircle className="w-5 h-5 text-gray-900" />
               <div className="text-left">
-                <div className="font-semibold">45,000+</div>
+                <div className="font-semibold">{stats.quizzesCompleted}+</div>
                 <div className="text-sm text-gray-600">Quizzes Completed</div>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-3">
               <BarChart3 className="w-5 h-5 text-gray-900" />
               <div className="text-left">
-                <div className="font-semibold">87%</div>
+                <div className="font-semibold">{stats.successRate}%</div>
                 <div className="text-sm text-gray-600">Success Rate</div>
               </div>
             </div>

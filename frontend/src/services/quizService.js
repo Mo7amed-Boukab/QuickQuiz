@@ -44,3 +44,8 @@ export const getLeaderboard = async () => {
   const response = await api.get("/quiz/leaderboard");
   return response.data;
 };
+
+export const getGlobalStats = async () => {
+  const response = await api.get("/quiz/global-stats");
+  return response.data;
+};

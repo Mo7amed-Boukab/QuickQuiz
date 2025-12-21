@@ -2,6 +2,7 @@ const Score = require("../models/score");
 const Theme = require("../models/theme");
 const Question = require("../models/question");
 const Quiz = require("../models/quiz");
+const User = require("../models/user");
 const ApiError = require("../utils/ApiError");
 
 // @desc    Get all quizzes
@@ -365,6 +366,41 @@ exports.getLeaderboard = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: leaderboard,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get global stats
+// @route   GET /api/quiz/global-stats
+// @access  Public
+exports.getGlobalStats = async (req, res, next) => {
+  try {
+    const usersCount = await User.countDocuments();
+    const quizzesCompleted = await Score.countDocuments();
+
+    const scores = await Score.find().select("score totalQuestions");
+    let totalPercentage = 0;
+
+    if (scores.length > 0) {
+      const total = scores.reduce((acc, curr) => {
+        const maxScore = curr.totalQuestions * 10;
+        if (maxScore > 0) {
+          return acc + curr.score / maxScore;
+        }
+        return acc;
+      }, 0);
+      totalPercentage = Math.round((total / scores.length) * 100);
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        usersCount,
+        quizzesCompleted,
+        successRate: totalPercentage,
+      },
     });
   } catch (error) {
     next(error);
