@@ -4,10 +4,12 @@ import { ArrowRight, CheckCircle, Clock, Clock as ClockIcon, RotateCcw, Star, Tr
 import Loader from "../../components/common/Loader";
 import { getQuestions } from '../../services/questionService';
 import { getQuizzes, submitQuiz } from '../../services/quizService';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Quiz() {
     const navigate = useNavigate();
     const { quizId } = useParams();
+    const { user } = useAuth();
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [score, setScore] = useState(0);
@@ -251,7 +253,8 @@ export default function Quiz() {
                 correctCount: resolvedResults.correctCount,
                 timeTakenSeconds: resolvedResults.timeTakenSeconds,
                 percentage: resolvedResults.percentage,
-                userName: JSON.parse(localStorage.getItem('currentUser') || '{}').fullName || 'Anonymous',
+                userId: user?._id,
+                userName: user?.fullName || 'Anonymous',
                 date: new Date().toISOString(),
             });
             localStorage.setItem('quizHistory', JSON.stringify(history));

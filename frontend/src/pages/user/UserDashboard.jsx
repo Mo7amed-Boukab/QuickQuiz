@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
+import { useAuth } from "../../context/AuthContext";
 
 export default function UserDashboard() {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     totalQuizzes: 0,
     averageScore: 0,
@@ -12,54 +14,56 @@ export default function UserDashboard() {
   const [leaderboard, setLeaderboard] = useState([]);
 
   const syncStats = () => {
-    const history = JSON.parse(localStorage.getItem("quizHistory") || "[]");
+    const allHistory = JSON.parse(localStorage.getItem("quizHistory") || "[]");
 
-    if (!history.length) {
+    // Filter history for current user stats
+    const userHistory = allHistory.filter((h) => h.userId === user?._id);
+
+    if (!userHistory.length) {
       setStats({
         totalQuizzes: 0,
         averageScore: 0,
         totalTime: 0,
         bestStreak: 0,
       });
-      setLeaderboard([]);
-      return;
+    } else {
+      const total = userHistory.length;
+      const avgScore = Math.round(
+        userHistory.reduce((acc, h) => {
+          const maxPoints = (h.totalQuestions || 0) * 10 || 1;
+          return acc + (h.score / maxPoints) * 100;
+        }, 0) / total
+      );
+      const totalTimeSeconds = userHistory.reduce(
+        (acc, h) => acc + (h.timeTakenSeconds || h.timeElapsed || 0),
+        0
+      );
+      const totalTime = Math.round(totalTimeSeconds / 60);
+
+      const sorted = [...userHistory].sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      let streak = 0;
+      let bestStreak = 0;
+      sorted.forEach((item) => {
+        if (item.score > 0) {
+          streak += 1;
+          bestStreak = Math.max(bestStreak, streak);
+        } else {
+          streak = 0;
+        }
+      });
+
+      setStats({
+        totalQuizzes: total,
+        averageScore: avgScore,
+        totalTime,
+        bestStreak,
+      });
     }
 
-    const total = history.length;
-    const avgScore = Math.round(
-      history.reduce((acc, h) => {
-        const maxPoints = (h.totalQuestions || 0) * 10 || 1;
-        return acc + (h.score / maxPoints) * 100;
-      }, 0) / total
-    );
-    const totalTimeSeconds = history.reduce(
-      (acc, h) => acc + (h.timeTakenSeconds || h.timeElapsed || 0),
-      0
-    );
-    const totalTime = Math.round(totalTimeSeconds / 60);
-
-    const sorted = [...history].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
-    let streak = 0;
-    let bestStreak = 0;
-    sorted.forEach((item) => {
-      if (item.score > 0) {
-        streak += 1;
-        bestStreak = Math.max(bestStreak, streak);
-      } else {
-        streak = 0;
-      }
-    });
-
-    setStats({
-      totalQuizzes: total,
-      averageScore: avgScore,
-      totalTime,
-      bestStreak,
-    });
-
-    const aggregates = history.reduce((acc, item) => {
+    // Leaderboard uses all history
+    const aggregates = allHistory.reduce((acc, item) => {
       const name = item.userName || "Anonyme";
       const maxPoints = (item.totalQuestions || 0) * 10 || 1;
       const percent = (item.score / maxPoints) * 100;
@@ -88,7 +92,9 @@ export default function UserDashboard() {
   };
 
   useEffect(() => {
-    syncStats();
+    if (user) {
+      syncStats();
+    }
 
     const onStorage = (event) => {
       if (event.key === "quizHistory") {
@@ -107,7 +113,7 @@ export default function UserDashboard() {
       window.removeEventListener("focus", onCustom);
       window.removeEventListener("quizHistoryUpdated", onCustom);
     };
-  }, []);
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-[rgba(0,0,0,0.01)]">

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Loader from "../../components/common/Loader";
 import { getQuestions } from "../../services/questionService";
+import { useAuth } from "../../context/AuthContext";
 
 export default function PracticeMode() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [practiceQuestions, setPracticeQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -18,7 +20,11 @@ export default function PracticeMode() {
       try {
         setLoading(true);
         setError("");
-        const history = JSON.parse(localStorage.getItem("quizHistory") || "[]");
+        const allHistory = JSON.parse(
+          localStorage.getItem("quizHistory") || "[]"
+        );
+        const history = allHistory.filter((h) => h.userId === user?._id);
+
         if (!history.length) {
           setPracticeQuestions([]);
           return;
@@ -74,8 +80,10 @@ export default function PracticeMode() {
       }
     };
 
-    load();
-  }, []);
+    if (user) {
+      load();
+    }
+  }, [user]);
 
   const current = practiceQuestions[currentIndex];
   const total = practiceQuestions.length;

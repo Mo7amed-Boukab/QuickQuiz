@@ -2,18 +2,28 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Lock } from "lucide-react";
 import Header from "../../components/Header";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Achievements() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("quizHistory") || "[]");
-    setHistory(stored);
+    const loadHistory = () => {
+      const allHistory = JSON.parse(
+        localStorage.getItem("quizHistory") || "[]"
+      );
+      const userHistory = allHistory.filter((h) => h.userId === user?._id);
+      setHistory(userHistory);
+    };
+
+    if (user) {
+      loadHistory();
+    }
 
     const onCustom = () => {
-      const updated = JSON.parse(localStorage.getItem("quizHistory") || "[]");
-      setHistory(updated);
+      loadHistory();
     };
 
     window.addEventListener("quizHistoryUpdated", onCustom);
@@ -25,7 +35,7 @@ export default function Achievements() {
       window.removeEventListener("storage", onCustom);
       window.removeEventListener("focus", onCustom);
     };
-  }, []);
+  }, [user]);
 
   const stats = useMemo(() => {
     if (!history.length) {
