@@ -302,3 +302,71 @@ exports.getQuizStats = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Get leaderboard
+// @route   GET /api/quiz/leaderboard
+// @access  Public
+exports.getLeaderboard = async (req, res, next) => {
+  try {
+    const leaderboard = await Score.aggregate([
+      {
+        $project: {
+          user: 1,
+          score: 1,
+          totalQuestions: 1,
+          percentage: {
+            $cond: [
+              { $eq: ["$totalQuestions", 0] },
+              0,
+              {
+                $multiply: [
+                  {
+                    $divide: ["$score", { $multiply: ["$totalQuestions", 10] }],
+                  },
+                  100,
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$user",
+          totalScore: { $sum: "$score" },
+          totalQuizzes: { $sum: 1 },
+          avgPercent: { $avg: "$percentage" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $unwind: "$userDetails",
+      },
+      {
+        $project: {
+          _id: 1,
+          name: "$userDetails.username",
+          totalScore: 1,
+          totalQuizzes: 1,
+          avgPercent: { $round: ["$avgPercent", 0] },
+        },
+      },
+      { $sort: { totalScore: -1 } },
+      { $limit: 10 },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: leaderboard,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

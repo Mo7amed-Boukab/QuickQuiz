@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
+import { getLeaderboard } from "../../services/quizService";
 
 export default function UserDashboard() {
   const { user } = useAuth();
@@ -61,39 +62,29 @@ export default function UserDashboard() {
         bestStreak,
       });
     }
+  };
 
-    // Leaderboard uses all history
-    const aggregates = allHistory.reduce((acc, item) => {
-      const name = item.userName || "Anonyme";
-      const maxPoints = (item.totalQuestions || 0) * 10 || 1;
-      const percent = (item.score / maxPoints) * 100;
-
-      if (!acc[name]) {
-        acc[name] = { count: 0, totalPercent: 0, totalScore: 0 };
+  const fetchLeaderboardData = async () => {
+    try {
+      const response = await getLeaderboard();
+      if (response.success) {
+        const top = response.data.map((entry, idx) => ({
+          rank: idx + 1,
+          name: entry.name || "Anonyme",
+          stats: `${entry.totalQuizzes} quiz complétés • ${entry.avgPercent}% de moyenne`,
+          score: `${entry.totalScore} pts`,
+        }));
+        setLeaderboard(top);
       }
-      acc[name].count += 1;
-      acc[name].totalPercent += percent;
-      acc[name].totalScore += item.score;
-      return acc;
-    }, {});
-
-    const top = Object.entries(aggregates)
-      .map(([name, data]) => {
-        const avgPercent = Math.round(data.totalPercent / data.count);
-        const statsText = `${data.count} quiz complétés • ${avgPercent}% de moyenne`;
-        const scoreLabel = `${data.totalScore} pts`;
-        return { name, stats: statsText, score: scoreLabel, avgPercent };
-      })
-      .sort((a, b) => b.avgPercent - a.avgPercent)
-      .slice(0, 5)
-      .map((entry, idx) => ({ ...entry, rank: idx + 1 }));
-
-    setLeaderboard(top);
+    } catch (error) {
+      console.error("Failed to fetch leaderboard", error);
+    }
   };
 
   useEffect(() => {
     if (user) {
       syncStats();
+      fetchLeaderboardData();
     }
 
     const onStorage = (event) => {

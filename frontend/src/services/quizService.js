@@ -39,3 +39,8 @@ export const getQuizStats = async () => {
   const response = await api.get("/quiz/stats");
   return response.data;
 };
+
+export const getLeaderboard = async () => {
+  const response = await api.get("/quiz/leaderboard");
+  return response.data;
+};
