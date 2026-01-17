@@ -1,0 +1,80 @@
+# ============================================
+# QuickQuiz Docker Compose - Development
+# ============================================
+# Usage: docker-compose -f docker-compose.dev.yml up -d
+# ============================================
+
+services:
+  # ==========================================
+  # MongoDB Database
+  # ==========================================
+  mongodb:
+    image: mongo:7-jammy
+    container_name: quickquiz-mongodb-dev
+    environment:
+      MONGO_INITDB_DATABASE: ${DB_NAME:-quiz_app}
+    ports:
+      - "${DB_PORT:-27017}:27017"
+    volumes:
+      - mongo-data-dev:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - quiz-network-dev
+
+  # ==========================================
+  # Backend API (Development Mode)
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: quickquiz-backend-dev
+    environment:
+      PORT: ${PORT:-3000}
+      NODE_ENV: development
+      MONGO_URI: mongodb://mongodb:27017/${DB_NAME:-quiz_app}
+      JWT_SECRET: ${JWT_SECRET:-ceb306eaa49e1cf64b1d8c774fb1cd5fce2e07f9642085fc80aea63601d1b9d136bef96d7a604fb055493dc798c10c68b94dca160ff4706ebf0b9b35be497712}
+      JWT_EXPIRE: ${JWT_EXPIRE:-24h}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - quiz-network-dev
+    command: npm run dev
+
+  # ==========================================
+  # Frontend Application (Development Mode)
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: quickquiz-frontend-dev
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - quiz-network-dev
+    command: npm run dev
+
+networks:
+  quiz-network-dev:
+    driver: bridge
+
+volumes:
+  mongo-data-dev:

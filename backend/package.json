@@ -8,7 +8,8 @@
     "dev": "nodemon server.js",
     "lint": "eslint .",
     "seed:admin": "node adminSeeder.js",
-    "seed:quiz": "node quizSeeder.js"
+    "seed:quiz": "node quizSeeder.js",
+    "seed:prod": "node adminSeeder.js && node quizSeeder.js"
   },
   "keywords": [
     "quiz",
