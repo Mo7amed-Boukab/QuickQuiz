@@ -68,47 +68,74 @@ export default function HistoryTable() {
       )}
 
       {!loading && !error && formattedRows.length > 0 && (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[#f9fafb]">
-              <tr className="border-b border-[#e5e5e5]">
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">
-                  Utilisateur
-                </th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">
-                  Email
-                </th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-24">
-                  Score
-                </th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">
-                  Thème
-                </th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">
-                  Date de jeu
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {formattedRows.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-b border-[#e5e5e5] last:border-0 hover:bg-[rgba(0,0,0,0.02)] transition-colors"
-                >
-                  <td className="py-3 px-4 text-sm">{item.user}</td>
-                  <td className="py-3 px-4 text-sm text-[#737373]">
-                    {item.email}
-                  </td>
-                  <td className="py-3 px-4 text-sm">{item.score}</td>
-                  <td className="py-3 px-4 text-sm">{item.theme}</td>
-                  <td className="py-3 px-4 text-sm text-[#737373]">
-                    {item.date}
-                  </td>
+        <>
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-[#f9fafb]">
+                <tr className="border-b border-[#e5e5e5]">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">
+                    Utilisateur
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">
+                    Email
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-24">
+                    Score
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[#737373]">
+                    Thème
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[#737373] w-48">
+                    Date de jeu
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {formattedRows.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="border-b border-[#e5e5e5] last:border-0 hover:bg-[rgba(0,0,0,0.02)] transition-colors"
+                  >
+                    <td className="py-3 px-4 text-sm">{item.user}</td>
+                    <td className="py-3 px-4 text-sm text-[#737373]">
+                      {item.email}
+                    </td>
+                    <td className="py-3 px-4 text-sm">{item.score}</td>
+                    <td className="py-3 px-4 text-sm">{item.theme}</td>
+                    <td className="py-3 px-4 text-sm text-[#737373]">
+                      {item.date}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card Layout */}
+          <div className="md:hidden">
+            {formattedRows.map((item) => (
+              <div key={item.id} className="p-4 border-b border-[#e5e5e5] last:border-0 hover:bg-gray-50">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <p className="text-sm font-medium text-[#1a1a1a]">{item.user}</p>
+                    <p className="text-xs text-[#737373]">{item.email}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-[#1a1a1a] leading-none">{item.score}</p>
+                    <p className="text-[10px] text-[#737373]">points</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-[#737373] mt-2">
+                  <span className="bg-[#f4f4f5] px-2 py-0.5 rounded text-[#1a1a1a] font-medium max-w-[140px] truncate">
+                    {item.theme}
+                  </span>
+                  <span>{item.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

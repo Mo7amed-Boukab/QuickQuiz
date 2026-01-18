@@ -60,11 +60,11 @@ export default function UsersTable() {
 
   const filteredUsers = Array.isArray(users)
     ? users.filter(
-        (user) =>
-          user.role !== "admin" && // Exclude admins
-          (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
-      )
+      (user) =>
+        user.role !== "admin" && // Exclude admins
+        (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
     : [];
 
   if (loading) return <Loader text="Chargement des utilisateurs..." />;
@@ -82,12 +82,13 @@ export default function UsersTable() {
             placeholder="Rechercher un utilisateur..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
+            className="w-full h-10 max-md:h-10 pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
           />
         </div>
       </div>
 
-      <div className="bg-white border border-[#e5e5e5] rounded overflow-hidden">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-white border border-[#e5e5e5] rounded overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#f9fafb]">
@@ -159,6 +160,46 @@ export default function UsersTable() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div key={user._id} className="border border-[#e5e5e5] rounded p-4 bg-white">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-[#f4f4f5] flex items-center justify-center text-xs font-semibold text-[#1a1a1a]">
+                  {(user.username || "U")[0].toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{user.username}</p>
+                  <p className="text-xs text-[#737373] truncate">{user.email}</p>
+                </div>
+                <span className="px-2 py-1 text-[10px] font-medium rounded bg-gray-100 text-gray-900">
+                  {user.role}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-[#737373] mb-3">
+                <span>Inscrit le {new Date(user.createdAt).toLocaleDateString()}</span>
+                <span className="font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                  #{user._id.substring(user._id.length - 4)}
+                </span>
+              </div>
+
+              <button
+                onClick={() => handleDeleteClick(user)}
+                className="w-full h-9 text-xs font-medium bg-red-50 text-red-600 border border-red-200 rounded hover:bg-red-100 active:bg-red-200 transition-colors"
+              >
+                Supprimer
+              </button>
+            </div>
+          ))
+        ) : (
+          <div className="py-8 text-center text-gray-500 text-sm border border-[#e5e5e5] rounded bg-white">
+            Aucun utilisateur trouvé
+          </div>
+        )}
       </div>
 
       <ConfirmationModal

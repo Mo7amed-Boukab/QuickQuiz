@@ -1,0 +1,113 @@
+/* ==========================================================================
+   QUICKQUIZ MOBILE STYLES
+   Only affects screens <= 768px (mobile/tablet)
+   Desktop (>1024px) remains completely unchanged
+   ========================================================================== */
+
+/* ==========================================================================
+   MOBILE PORTRAIT (max-width: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+
+    /* Global spacing adjustments */
+    .mobile-container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    /* Safe area for bottom navigation */
+    .mobile-safe-bottom {
+        padding-bottom: 80px !important;
+    }
+
+    /* Compact cards */
+    .mobile-card-compact {
+        padding: 12px !important;
+    }
+
+    /* Touch-friendly targets - UPDATED for Pro Size */
+    .mobile-touch-target {
+        min-height: 40px;
+        /* Reduced from 48px */
+        min-width: 40px;
+    }
+}
+
+/* ==========================================================================
+   MOBILE LANDSCAPE / SMALL TABLET (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+    /* Main content safe spacing for fixed bottom nav */
+    main {
+        padding-bottom: 80px;
+    }
+
+    /* Stats grid - 2 columns on mobile */
+    .stats-grid-mobile {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    /* Compact text */
+    .text-compact {
+        font-size: 0.875rem;
+        /* 14px */
+    }
+
+    /* Full-width buttons */
+    .btn-mobile-full {
+        width: 100%;
+    }
+
+    /* Bottom navigation visibility */
+    .bottom-nav-mobile {
+        display: flex !important;
+    }
+
+    .bottom-nav-desktop {
+        display: none !important;
+    }
+
+    /* NEW: Professional Mobile Inputs */
+    .mobile-input {
+        height: 40px !important;
+        font-size: 14px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+
+    /* Prevent iOS zoom on focus */
+    .mobile-input:focus {
+        font-size: 16px !important;
+    }
+}
+
+/* ==========================================================================
+   TABLET (max-width: 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+
+    /* Slightly reduced padding for tablets */
+    .tablet-padding {
+        padding: 16px;
+    }
+}
+
+/* ==========================================================================
+   HIDE ON MOBILE - Utility class
+   ========================================================================== */
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+}
+
+/* ==========================================================================
+   SHOW ONLY ON MOBILE - Utility class
+   ========================================================================== */
+@media (min-width: 769px) {
+    .show-on-mobile-only {
+        display: none !important;
+    }
+}

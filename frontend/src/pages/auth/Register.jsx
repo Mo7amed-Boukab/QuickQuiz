@@ -68,7 +68,7 @@ export default function Register() {
     } catch (err) {
       setError(
         err.response?.data?.error ||
-          "Une erreur est survenue lors de l'inscription."
+          "Une erreur est survenue lors de l'inscription.",
       );
     } finally {
       setIsLoading(false);
@@ -79,24 +79,24 @@ export default function Register() {
     <div className="min-h-screen bg-white">
       <Header />
       {/* Main Content */}
-      <main className="py-20">
-        <div className="max-w-lg mx-auto px-6">
-          <div className="bg-white border border-gray-200 rounded-md p-8">
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-2 text-center">
+      <main className="py-8 md:py-20 min-h-[calc(100vh-56px)] md:min-h-0 flex items-center justify-center md:block">
+        <div className="w-full max-w-lg mx-auto px-0 md:px-6">
+          <div className="bg-white md:border border-gray-200 rounded p-6 md:p-10 max-md:px-4 max-md:py-6">
+            <div className="mb-6 md:mb-8 text-center md:text-left">
+              <h2 className="text-3xl md:text-2xl max-md:text-xl font-bold md:font-semibold mb-2 text-center">
                 Créer un compte
               </h2>
-              <p className="text-gray-600 text-sm text-center">
+              <p className="text-gray-600 text-base md:text-sm max-md:text-xs text-center mb-6 md:mb-10 max-w-[280px] mx-auto md:max-w-none leading-relaxed">
                 Rejoignez QuickQuiz pour suivre vos progrès et rivaliser avec
                 d'autres développeurs
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-4">
               <div>
                 <label
                   htmlFor="username"
-                  className="block text-sm font-small mb-2"
+                  className="block text-sm max-md:text-xs font-medium md:font-small mb-1.5 md:mb-2 text-gray-700"
                 >
                   Nom d'utilisateur
                 </label>
@@ -108,7 +108,7 @@ export default function Register() {
                     setFormData({ ...formData, username: e.target.value });
                     setError("");
                   }}
-                  className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
+                  className="w-full h-12 md:h-auto text-base md:text-sm max-md:h-10 max-md:text-sm px-4 md:px-3 max-md:px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black mobile-input"
                   placeholder="Entrez votre nom d'utilisateur"
                   required
                 />
@@ -117,7 +117,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-small mb-2"
+                  className="block text-sm max-md:text-xs font-medium md:font-small mb-1.5 md:mb-2 text-gray-700"
                 >
                   Adresse email
                 </label>
@@ -129,7 +129,7 @@ export default function Register() {
                     setFormData({ ...formData, email: e.target.value });
                     setError("");
                   }}
-                  className="w-full text-sm px-3 py-2 border border-gray-300 rounded focus:outline-none"
+                  className="w-full h-12 md:h-auto text-base md:text-sm max-md:h-10 max-md:text-sm px-4 md:px-3 max-md:px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black mobile-input"
                   placeholder="votre@email.com"
                   required
                 />
@@ -138,7 +138,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-small mb-2"
+                  className="block text-sm max-md:text-xs font-medium md:font-small mb-1.5 md:mb-2 text-gray-700"
                 >
                   Mot de passe
                 </label>
@@ -151,7 +151,7 @@ export default function Register() {
                       setFormData({ ...formData, password: e.target.value });
                       setError("");
                     }}
-                    className="w-full text-sm px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none"
+                    className="w-full h-12 md:h-auto text-base md:text-sm max-md:h-10 max-md:text-sm px-4 md:px-3 max-md:px-3 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black mobile-input password-input"
                     placeholder="Créez un mot de passe sécurisé"
                     required
                   />
@@ -161,9 +161,9 @@ export default function Register() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm hover:text-gray-700"
                   >
                     {showPassword ? (
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-5 h-5 max-md:w-4 max-md:h-4" />
                     ) : (
-                      <EyeOff className="w-4 h-4" />
+                      <EyeOff className="w-5 h-5 max-md:w-4 max-md:h-4" />
                     )}
                   </button>
                 </div>
@@ -172,7 +172,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-small mb-2"
+                  className="block text-sm max-md:text-xs font-medium md:font-small mb-1.5 md:mb-2 text-gray-700"
                 >
                   Confirmer le mot de passe
                 </label>
@@ -188,7 +188,7 @@ export default function Register() {
                       });
                       setError("");
                     }}
-                    className="w-full text-sm px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none"
+                    className="w-full h-12 md:h-auto text-base md:text-sm max-md:h-10 max-md:text-sm px-4 md:px-3 max-md:px-3 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-black mobile-input password-input"
                     placeholder="Confirmez votre mot de passe"
                     required
                   />
@@ -198,9 +198,9 @@ export default function Register() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   >
                     {showConfirmPassword ? (
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-5 h-5 max-md:w-4 max-md:h-4" />
                     ) : (
-                      <EyeOff className="w-4 h-4" />
+                      <EyeOff className="w-5 h-5 max-md:w-4 max-md:h-4" />
                     )}
                   </button>
                 </div>
@@ -219,12 +219,12 @@ export default function Register() {
                       });
                       setError("");
                     }}
-                    className="w-4 h-4 mt-0.5 border-gray-300 rounded"
+                    className="w-4 h-4 max-md:w-3.5 max-md:h-3.5 mt-0.5 border-gray-300 rounded"
                     required
                   />
                   <label
                     htmlFor="acceptTerms"
-                    className="ml-2 text-sm text-gray-700"
+                    className="ml-2 text-sm max-md:text-xs text-gray-700"
                   >
                     J'accepte les{" "}
                     <Link to="#" className="text-black hover:underline">
@@ -239,7 +239,7 @@ export default function Register() {
               </div>
 
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+                <div className="p-3 bg-red-50 border border-red-200 rounded text-sm max-md:text-xs text-red-600">
                   {error}
                 </div>
               )}
@@ -247,18 +247,18 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-2 bg-black text-white text-sm rounded font-small hover:bg-gray-800 transition-colors"
+                className="w-full h-12 md:h-auto text-base md:text-sm max-md:h-11 max-md:text-sm py-2 bg-black text-white rounded font-medium hover:bg-gray-800 transition-colors mt-6 md:mt-4 flex items-center justify-center"
               >
                 {isLoading ? "Création du compte..." : "Créer mon compte"}
               </button>
             </form>
 
-            <div className="mt-6 text-center text-sm">
+            <div className="mt-6 text-center text-sm max-md:text-xs">
               <p className="text-gray-600">
                 Déjà un compte ?{" "}
                 <Link
                   to="/login"
-                  className="text-black font-medium hover:underline"
+                  className="text-black font-medium hover:underline inline-block"
                 >
                   Se connecter
                 </Link>

@@ -29,12 +29,13 @@ export default function QuizTable({
             placeholder="Rechercher un quiz ou un thème..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
+            className="w-full h-10 max-md:h-10 pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
           />
         </div>
       </div>
 
-      <div className="bg-white border border-[#e5e5e5] rounded overflow-hidden">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-white border border-[#e5e5e5] rounded overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#f9fafb]">
@@ -82,19 +83,18 @@ export default function QuizTable({
                     </td>
                     <td className="py-3 px-4 text-sm text-center">
                       <span
-                        className={`px-2 py-1 rounded text-xs font-medium ${
-                          quiz.difficulty === "Beginner"
-                            ? "bg-green-100 text-green-800"
-                            : quiz.difficulty === "Intermediate"
+                        className={`px-2 py-1 rounded text-xs font-medium ${quiz.difficulty === "Beginner"
+                          ? "bg-green-100 text-green-800"
+                          : quiz.difficulty === "Intermediate"
                             ? "bg-blue-100 text-blue-800"
                             : "bg-red-100 text-red-800"
-                        }`}
+                          }`}
                       >
                         {quiz.difficulty === "Beginner"
                           ? "Débutant"
                           : quiz.difficulty === "Intermediate"
-                          ? "Intermédiaire"
-                          : "Avancé"}
+                            ? "Intermédiaire"
+                            : "Avancé"}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-sm text-center text-[#737373]">
@@ -134,6 +134,74 @@ export default function QuizTable({
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filteredQuizzes.length > 0 ? (
+          filteredQuizzes.map((quiz) => (
+            <div key={quiz._id} className="border border-[#e5e5e5] rounded p-4 bg-white">
+              {/* Header: Title + Badge */}
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1 pr-2">
+                  <h3 className="text-base font-semibold mb-1 truncate">
+                    {quiz.title}
+                  </h3>
+                  <div className="flex items-center gap-1.5 text-xs text-[#737373]">
+                    <Tag className="w-3.5 h-3.5" />
+                    {quiz.theme?.name || "Inconnu"}
+                  </div>
+                </div>
+                <span
+                  className={`px-2 py-1 rounded text-[10px] font-medium whitespace-nowrap ${quiz.difficulty === "Beginner"
+                    ? "bg-green-100 text-green-800"
+                    : quiz.difficulty === "Intermediate"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-red-100 text-red-800"
+                    }`}
+                >
+                  {quiz.difficulty === "Beginner"
+                    ? "Débutant"
+                    : quiz.difficulty === "Intermediate"
+                      ? "Intermédiaire"
+                      : "Avancé"}
+                </span>
+              </div>
+
+              {/* Meta Info */}
+              <div className="flex items-center gap-4 text-xs text-[#737373] mb-3">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {quiz.timeLimit} min
+                </span>
+                <span className="flex items-center gap-1">
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  {quiz.questionCount} questions
+                </span>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEdit && onEdit(quiz)}
+                  className="flex-1 h-9 text-xs font-medium border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] active:bg-gray-100 transition-colors"
+                >
+                  Modifier
+                </button>
+                <button
+                  onClick={() => onDelete && onDelete(quiz._id)}
+                  className="flex-1 h-9 text-xs font-medium bg-red-50 text-red-600 border border-red-200 rounded hover:bg-red-100 active:bg-red-200 transition-colors"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="py-8 text-center text-gray-500 text-sm border border-[#e5e5e5] rounded bg-white">
+            Aucun quiz trouvé
+          </div>
+        )}
       </div>
     </div>
   );

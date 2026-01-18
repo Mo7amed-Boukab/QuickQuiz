@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@import "./styles/mobile.css";
+
+/* Fix password input vertical padding */
+.password-input {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  line-height: 1.25rem;
+}

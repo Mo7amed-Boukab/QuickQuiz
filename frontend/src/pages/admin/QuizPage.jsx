@@ -92,17 +92,17 @@ export default function QuizPage() {
 
     return (
         <>
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-xl font-medium">Gestion des Quiz</h2>
-                    <p className="text-sm text-[#737373] mt-1">Créez et gérez vos quiz (HTML, CSS, JS...)</p>
+            <div className="flex justify-between items-center mb-6 max-md:mb-4">
+                <div className="flex-1 pr-4">
+                    <h2 className="text-xl font-medium max-md:text-lg">Gestion des Quiz</h2>
+                    <p className="text-sm text-[#737373] mt-1 max-md:text-xs max-md:line-clamp-1">Créez et gérez vos quiz (HTML, CSS, JS...)</p>
                 </div>
                 <button
                     onClick={handleOpenCreateModal}
-                    className="flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 rounded text-sm hover:bg-black transition-colors"
+                    className="flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 max-md:p-2 rounded text-sm hover:bg-black transition-colors shrink-0"
                 >
                     <Plus className="w-4 h-4" />
-                    Nouveau Quiz
+                    <span>Nouveau Quiz</span>
                 </button>
             </div>
 

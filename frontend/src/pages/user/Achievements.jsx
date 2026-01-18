@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Lock } from "lucide-react";
 import Header from "../../components/Header";
+import BottomNavigation from "../../components/common/BottomNavigation";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Achievements() {
@@ -145,72 +146,64 @@ export default function Achievements() {
   const hasHistory = history.length > 0;
 
   return (
-    <div className="min-h-screen bg-[rgba(0,0,0,0.01)]">
+    <div className="min-h-screen bg-[rgba(0,0,0,0.01)] pb-20 md:pb-0">
       <Header />
-      <main className="py-8">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-8">
+      <main className="py-6 md:py-8">
+        <div className="max-w-5xl mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
             <div>
-              <p className="text-sm text-gray-600 mb-4">Vos jalons et badges</p>
-              <h1 className="text-3xl font-semibold text-gray-900">
+              <p className="text-xs md:text-sm text-gray-600 mb-2 md:mb-4">Vos jalons et badges</p>
+              <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">
                 Réalisations
               </h1>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500 mb-4">Badges débloqués</div>
-              <div className="text-xl font-semibold text-gray-900">
+              <div className="text-xs md:text-sm text-gray-500 mb-2 md:mb-4">Badges débloqués</div>
+              <div className="text-lg md:text-xl font-semibold text-gray-900">
                 {unlockedCount}/{badges.length}
               </div>
             </div>
           </div>
 
           {!hasHistory && (
-            <div className="bg-white border border-gray-200 rounded p-8 text-center">
-              <h2 className="text-xl font-semibold mb-2">
+            <div className="bg-white border border-gray-200 rounded p-6 md:p-8 text-center">
+              <h2 className="text-lg md:text-xl font-semibold mb-2">
                 Pas encore de badges
               </h2>
-              <p className="text-gray-600 mb-4">
+              <p className="text-sm md:text-base text-gray-600 mb-4">
                 Lancez un premier quiz pour commencer à débloquer des
                 réalisations.
               </p>
-              <Link
-                to="/quizlist"
-                className="px-6 py-2 inline-block bg-black text-white rounded hover:bg-gray-900 no-underline"
-              >
-                Aller aux quiz
-              </Link>
             </div>
           )}
 
           {hasHistory && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               {badges.map((badge) => (
                 <div
                   key={badge.id}
-                  className={`rounded p-4 flex items-center gap-4 transition-all ${
-                    badge.unlocked
-                      ? "bg-green-50 border border-gray-100"
-                      : "bg-white border border-gray-100"
-                  }`}
+                  className={`rounded p-3 md:p-4 flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4 transition-all text-center md:text-left ${badge.unlocked
+                    ? "bg-green-50 border border-gray-100"
+                    : "bg-white border border-gray-100"
+                    }`}
                 >
                   <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border ${
-                      badge.unlocked
-                        ? "bg-green-100 text-green-700 border-green-200"
-                        : "bg-gray-100 text-gray-500 border-gray-200"
-                    }`}
+                    className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border flex-shrink-0 ${badge.unlocked
+                      ? "bg-green-100 text-green-700 border-green-200"
+                      : "bg-gray-100 text-gray-500 border-gray-200"
+                      }`}
                   >
                     {badge.unlocked ? (
-                      <CheckCircle className="w-5 h-5" />
+                      <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                     ) : (
-                      <Lock className="w-5 h-5" />
+                      <Lock className="w-4 h-4 md:w-5 md:h-5" />
                     )}
                   </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-gray-900">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm md:text-base text-gray-900 mb-1 md:mb-0">
                       {badge.title}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-xs md:text-sm text-gray-600 line-clamp-2 md:line-clamp-none">
                       {badge.description}
                     </div>
                   </div>
@@ -219,22 +212,23 @@ export default function Achievements() {
             </div>
           )}
 
-          <div className="mt-10 pt-6 flex gap-3 border-t border-gray-200">
+          <div className="mt-8 md:mt-10 pt-6 flex flex-col-reverse md:flex-row gap-3 border-t border-gray-200">
             <button
               onClick={() => navigate(-1)}
-              className="px-4 py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50"
+              className="px-4 py-3 md:py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50 min-h-[48px] md:min-h-0"
             >
               Retour
             </button>
             <Link
               to="/quizlist"
-              className="px-6 py-2 bg-black text-white rounded hover:bg-gray-900 no-underline"
+              className="px-6 py-3 md:py-2 bg-black text-white rounded hover:bg-gray-900 no-underline text-center min-h-[48px] md:min-h-0 flex items-center justify-center"
             >
               Lancer un quiz
             </Link>
           </div>
         </div>
       </main>
+      <BottomNavigation />
     </div>
   );
 }

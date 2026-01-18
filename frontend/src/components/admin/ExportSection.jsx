@@ -138,25 +138,25 @@ export default function ExportSection() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-md:gap-4">
       {/* Export Quiz */}
-      <div className="bg-white border border-[#e5e5e5] rounded p-6">
-        <h2 className="text-lg mb-2">Export Quiz</h2>
-        <p className="text-sm text-[#737373] mb-6">
+      <div className="bg-white border border-[#e5e5e5] rounded p-6 max-md:p-4">
+        <h2 className="text-lg font-medium mb-2 max-md:text-base">Export Quiz</h2>
+        <p className="text-sm text-[#737373] mb-6 max-md:mb-4 max-md:text-xs">
           Exporter tous les quiz au format CSV ou JSON
         </p>
         <div className="flex gap-3">
           <button
             onClick={() => handleExport("quiz", "csv")}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 h-9 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50 transition-colors max-md:flex-1 max-md:h-10"
           >
             <Download className="w-4 h-4" /> CSV
           </button>
           <button
             onClick={() => handleExport("quiz", "json")}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] text-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 h-9 border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] text-sm disabled:opacity-50 transition-colors max-md:flex-1 max-md:h-10"
           >
             <Download className="w-4 h-4" /> JSON
           </button>
@@ -164,23 +164,23 @@ export default function ExportSection() {
       </div>
 
       {/* Export Questions */}
-      <div className="bg-white border border-[#e5e5e5] rounded p-6">
-        <h2 className="text-lg mb-2">Export Questions</h2>
-        <p className="text-sm text-[#737373] mb-6">
+      <div className="bg-white border border-[#e5e5e5] rounded p-6 max-md:p-4">
+        <h2 className="text-lg font-medium mb-2 max-md:text-base">Export Questions</h2>
+        <p className="text-sm text-[#737373] mb-6 max-md:mb-4 max-md:text-xs">
           Exporter toutes les questions au format CSV ou JSON
         </p>
         <div className="flex gap-3">
           <button
             onClick={() => handleExport("questions", "csv")}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 h-9 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50 transition-colors max-md:flex-1 max-md:h-10"
           >
             <Download className="w-4 h-4" /> CSV
           </button>
           <button
             onClick={() => handleExport("questions", "json")}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] text-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 h-9 border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] text-sm disabled:opacity-50 transition-colors max-md:flex-1 max-md:h-10"
           >
             <Download className="w-4 h-4" /> JSON
           </button>
@@ -188,23 +188,23 @@ export default function ExportSection() {
       </div>
 
       {/* Export Utilisateurs */}
-      <div className="bg-white border border-[#e5e5e5] rounded p-6">
-        <h2 className="text-lg mb-2">Export Utilisateurs</h2>
-        <p className="text-sm text-[#737373] mb-6">
+      <div className="bg-white border border-[#e5e5e5] rounded p-6 max-md:p-4">
+        <h2 className="text-lg font-medium mb-2 max-md:text-base">Export Utilisateurs</h2>
+        <p className="text-sm text-[#737373] mb-6 max-md:mb-4 max-md:text-xs">
           Exporter tous les utilisateurs au format CSV ou JSON
         </p>
         <div className="flex gap-3">
           <button
             onClick={() => handleExport("users", "csv")}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 h-9 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50 transition-colors max-md:flex-1 max-md:h-10"
           >
             <Download className="w-4 h-4" /> CSV
           </button>
           <button
             onClick={() => handleExport("users", "json")}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] text-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 h-9 border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] text-sm disabled:opacity-50 transition-colors max-md:flex-1 max-md:h-10"
           >
             <Download className="w-4 h-4" /> JSON
           </button>
@@ -212,15 +212,15 @@ export default function ExportSection() {
       </div>
 
       {/* Export Complet */}
-      <div className="bg-white border border-[#e5e5e5] rounded p-6">
-        <h2 className="text-lg mb-2">Export Complet</h2>
-        <p className="text-sm text-[#737373] mb-6">
+      <div className="bg-white border border-[#e5e5e5] rounded p-6 max-md:p-4">
+        <h2 className="text-lg font-medium mb-2 max-md:text-base">Export Complet</h2>
+        <p className="text-sm text-[#737373] mb-6 max-md:mb-4 max-md:text-xs">
           Exporter toutes les données de la plateforme
         </p>
         <button
           onClick={() => handleExport("complete")}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-4 py-2 h-9 bg-[#1a1a1a] text-white rounded hover:bg-black text-sm disabled:opacity-50 transition-colors w-auto max-md:w-full max-md:h-10"
         >
           <Download className="w-4 h-4" />
           {loading ? "Export en cours..." : "Export Complet"}

@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { Users, FileText, HelpCircle, Tag } from "lucide-react";
 import Header from "../../components/Header";
 import StatCard from "../../components/admin/StatCard";
+import AdminBottomNavigation from "../../components/admin/AdminBottomNavigation";
 import { getUsers } from "../../services/userService";
 import { getThemes } from "../../services/themeService";
 import { getQuestions } from "../../services/questionService";
@@ -95,12 +96,12 @@ export default function AdminDashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white pb-20 md:pb-0">
             <Header />
 
-            <main className="max-w-[1200px] mx-auto px-6 py-8">
+            <main className="max-w-[1200px] mx-auto px-6 max-md:px-4 py-8 max-md:py-6">
                 {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-md:gap-3 mb-12 max-md:mb-8">
                     {stats.map((stat, index) => (
                         <StatCard
                             key={index}
@@ -114,14 +115,14 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Tabs Navigation */}
-                <div className="bg-white overflow-hidden">
+                <div className="bg-white overflow-hidden hidden md:block">
                     <div className="border-b border-[#e5e5e5]">
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 max-md:gap-2 overflow-x-auto scrollbar-hide">
                             {tabs.map((tab) => (
                                 <Link
                                     key={tab.path}
                                     to={tab.path}
-                                    className={`py-2 px-4 text-sm border-b-2 transition-colors ${currentPath === tab.path
+                                    className={`py-2 px-4 max-md:px-3 max-md:py-3 text-sm max-md:text-xs whitespace-nowrap border-b-2 transition-colors ${currentPath === tab.path
                                         ? "border-[#1a1a1a] text-[#1a1a1a]"
                                         : "border-transparent text-[#737373] hover:text-[#1a1a1a]"
                                         }`}
@@ -131,13 +132,14 @@ export default function AdminDashboard() {
                             ))}
                         </div>
                     </div>
+                </div>
 
-                    {/* Tab Content */}
-                    <div className="py-6">
-                        <Outlet />
-                    </div>
+                {/* Tab Content */}
+                <div className="py-6 max-md:py-4">
+                    <Outlet />
                 </div>
             </main>
+            <AdminBottomNavigation />
         </div>
     );
 }

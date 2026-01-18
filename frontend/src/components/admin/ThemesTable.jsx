@@ -34,12 +34,13 @@ export default function ThemesTable({
             placeholder="Rechercher un thème..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
+            className="w-full h-10 max-md:h-10 pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
           />
         </div>
       </div>
 
-      <div className="bg-white border border-[#e5e5e5] rounded overflow-hidden">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-white border border-[#e5e5e5] rounded overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#f9fafb]">
@@ -97,6 +98,42 @@ export default function ThemesTable({
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filteredThemes.length > 0 ? (
+          filteredThemes.map((theme) => (
+            <div key={theme._id} className="border border-[#e5e5e5] rounded p-4 bg-white">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] text-[#737373] font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                  #{theme._id.substring(theme._id.length - 4)}
+                </span>
+              </div>
+
+              <h3 className="text-base font-medium mb-4">{theme.name}</h3>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEdit && onEdit(theme)}
+                  className="flex-1 h-9 text-xs font-medium border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] active:bg-gray-100 transition-colors"
+                >
+                  Modifier
+                </button>
+                <button
+                  onClick={() => handleDelete(theme._id)}
+                  className="flex-1 h-9 text-xs font-medium bg-red-50 text-red-600 border border-red-200 rounded hover:bg-red-100 active:bg-red-200 transition-colors"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="py-8 text-center text-gray-500 text-sm border border-[#e5e5e5] rounded bg-white">
+            Aucun thème trouvé
+          </div>
+        )}
       </div>
     </div>
   );

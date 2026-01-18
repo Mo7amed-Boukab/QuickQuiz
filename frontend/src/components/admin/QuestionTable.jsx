@@ -24,17 +24,17 @@ export default function QuestionsTable({
 
   const filteredQuestions = Array.isArray(questions)
     ? questions.filter((q) => {
-        const matchesSearch = q.question
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        const matchesQuiz =
-          filterQuiz === "all" ||
-          (q.quiz &&
-            (typeof q.quiz === "object"
-              ? q.quiz._id === filterQuiz || q.quiz.id === filterQuiz
-              : q.quiz === filterQuiz));
-        return matchesSearch && matchesQuiz;
-      })
+      const matchesSearch = q.question
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesQuiz =
+        filterQuiz === "all" ||
+        (q.quiz &&
+          (typeof q.quiz === "object"
+            ? q.quiz._id === filterQuiz || q.quiz.id === filterQuiz
+            : q.quiz === filterQuiz));
+      return matchesSearch && matchesQuiz;
+    })
     : [];
 
   if (loading) return <Loader text="Chargement des questions..." />;
@@ -51,13 +51,13 @@ export default function QuestionsTable({
             placeholder="Rechercher une question..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
+            className="w-full h-10 max-md:h-10 pl-10 pr-4 py-2 border border-[#e5e5e5] rounded focus:outline-none text-sm"
           />
         </div>
         <select
           value={filterQuiz}
           onChange={(e) => setFilterQuiz(e.target.value)}
-          className="px-4 py-2 border border-[#e5e5e5] rounded text-sm focus:outline-none bg-white min-w-[200px]"
+          className="px-4 py-2 border border-[#e5e5e5] rounded text-sm focus:outline-none bg-white min-w-[200px] h-10 max-md:h-10"
         >
           <option value="all">Tous les quiz</option>
           {quizzes.map((quiz) => (
@@ -68,7 +68,8 @@ export default function QuestionsTable({
         </select>
       </div>
 
-      <div className="bg-white border border-[#e5e5e5] rounded overflow-hidden">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-white border border-[#e5e5e5] rounded overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-[#f9fafb]">
@@ -134,6 +135,45 @@ export default function QuestionsTable({
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card Layout */}
+      <div className="md:hidden space-y-3">
+        {filteredQuestions.length > 0 ? (
+          filteredQuestions.map((q) => (
+            <div key={q._id} className="border border-[#e5e5e5] rounded p-4 bg-white">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-sm font-medium flex-1 pr-2 line-clamp-2">
+                  {q.question}
+                </p>
+                <span className="text-[10px] text-[#737373] whitespace-nowrap font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                  #{q._id.substring(q._id.length - 4)}
+                </span>
+              </div>
+              <p className="text-xs text-[#737373] mb-4">
+                Quiz: <span className="text-black font-medium">{typeof q.quiz === "object" ? q.quiz.title : getQuizTitle(q.quiz)}</span>
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEdit && onEdit(q)}
+                  className="flex-1 h-9 text-xs font-medium border border-[#e5e5e5] rounded hover:bg-[rgba(0,0,0,0.02)] active:bg-gray-100 transition-colors"
+                >
+                  Modifier
+                </button>
+                <button
+                  onClick={() => handleDelete(q._id)}
+                  className="flex-1 h-9 text-xs font-medium bg-red-50 text-red-600 border border-red-200 rounded hover:bg-red-100 active:bg-red-200 transition-colors"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="py-8 text-center text-gray-500 text-sm border border-[#e5e5e5] rounded bg-white">
+            Aucune question trouvée
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import QuestionModal from "../../components/admin/QuestionModal";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { getQuestions, createQuestion, deleteQuestion, updateQuestion } from "../../services/questionService";
 import { getQuizzes } from "../../services/quizService";
+import { Plus } from "lucide-react";
 
 export default function QuestionsPage() {
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
@@ -94,13 +95,17 @@ export default function QuestionsPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-medium">Gestion des Questions</h2>
+      <div className="flex items-center justify-between mb-6 max-md:mb-4">
+        <div className="flex-1 pr-4">
+          <h2 className="text-xl font-medium max-md:text-lg">Gestion des Questions</h2>
+          <p className="text-sm text-[#737373] mt-1 max-md:text-xs max-md:line-clamp-1">Gérez la banque de questions</p>
+        </div>
         <button
           onClick={() => setIsQuestionModalOpen(true)}
-          className="px-4 py-2 bg-[#1a1a1a] text-white rounded text-sm hover:bg-[#000] transition-colors"
+          className="flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 max-md:p-2 rounded text-sm hover:bg-black transition-colors shrink-0"
         >
-          + Nouvelle Question
+          <Plus className="w-4 h-4" />
+          <span>Nouvelle Question</span>
         </button>
       </div>
 

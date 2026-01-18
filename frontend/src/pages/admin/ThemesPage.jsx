@@ -3,6 +3,7 @@ import ThemesTable from "../../components/admin/ThemesTable";
 import ThemeModal from "../../components/admin/ThemeModal";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { getThemes, createTheme, deleteTheme, updateTheme } from "../../services/themeService";
+import { Plus } from "lucide-react";
 
 export default function ThemesPage() {
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
@@ -90,16 +91,20 @@ export default function ThemesPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-medium">Gestion des Thèmes</h2>
+      <div className="flex items-center justify-between mb-6 max-md:mb-4">
+        <div className="flex-1 pr-4">
+          <h2 className="text-xl font-medium max-md:text-lg">Gestion des Thèmes</h2>
+          <p className="text-sm text-[#737373] mt-1 max-md:text-xs max-md:line-clamp-1">Gérez les thématiques des quiz</p>
+        </div>
         <button
           onClick={() => {
             setThemeToEdit(null);
             setIsThemeModalOpen(true);
           }}
-          className="px-4 py-2 bg-[#1a1a1a] text-white rounded text-sm hover:bg-[#000] transition-colors"
+          className="flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 max-md:p-2 rounded text-sm hover:bg-black transition-colors shrink-0"
         >
-          + Nouveau Thème
+          <Plus className="w-4 h-4" />
+          <span>Nouveau Thème</span>
         </button>
       </div>
 
