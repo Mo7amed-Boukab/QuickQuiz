@@ -1,13 +1,13 @@
 # ============================================
 # Stage 1: Builder
 # ============================================
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
 # Install dependencies
-COPY package*.json ./
-RUN npm ci
+COPY package.json ./
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -15,25 +15,28 @@ COPY . .
 # ============================================
 # Stage 2: Production
 # ============================================
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 ENV NODE_ENV=production
 
 # Install only production dependencies
-COPY package*.json ./
-RUN npm ci --omit=dev
+COPY package.json ./
+RUN npm install --omit=dev
 
 # Copy application from builder stage
 COPY --from=builder /app .
 
-# Setup security (non-root user)
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Add startup script
+RUN chmod +x start.sh
+
+# Setup security
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 RUN chown -R appuser:appgroup /app
 
 USER appuser
 
 EXPOSE 3000
 
-# Démarrage de l'application
-CMD ["node", "server.js"]
+# Démarrage de l'application avec seeder
+CMD ["./start.sh"]

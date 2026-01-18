@@ -708,10 +708,11 @@ const seedData = async () => {
   }
 
   try {
-    const count = await Theme.countDocuments();
+    // Check if quizes exist (more reliable than just themes)
+    const count = await Quiz.countDocuments();
     if (count > 0) {
-      console.log("Data already exists. Use -d to delete.".yellow);
-      process.exit();
+      console.log("✓ Quiz data already exists.".yellow);
+      return process.exit(0);
     }
 
     console.log("Starting Seeding...".magenta);
@@ -747,7 +748,7 @@ const seedData = async () => {
         } else {
           minSeconds = 5; maxSeconds = 15;
         }
-        
+
         // Calculate average seconds per question for the quiz
         const avgSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
         const timeLimit = Math.ceil((questions.length * avgSeconds) / 60);

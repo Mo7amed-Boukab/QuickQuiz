@@ -1,156 +1,195 @@
-# QuickQuiz 
+# QuickQuiz
 
-QuickQuiz is a modern, interactive web development quiz platform designed to help developers test their knowledge, track progress, and master various web technologies. Built with the MERN stack (MongoDB, Express, React, Node.js) and Dockerized for easy deployment.
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat&logo=mongodb&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-20-339933?style=flat&logo=node.js&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?style=flat&logo=tailwind-css&logoColor=white)
 
-## Features
+QuickQuiz est une plateforme interactive d'apprentissage du développement web conçue pour tester les connaissances, suivre les progrès et maîtriser diverses technologies.
+Le projet utilise la stack **MERN (MongoDB, Express, React, Node.js)** et est entièrement containerisé avec **Docker**.
 
-### User Features
-*   **Authentication**: Secure Login and Registration system.
-*   **Quiz Interface**: Interactive quiz taking with timers and progress tracking.
-*   **Practice Mode**: Hone your skills without the pressure of a timer.
-*   **User Dashboard**: 
-    *   View personal quiz history and detailed scores.
-    *   Track performance stats (Average score, Total time, Best streak).
-    *   **Global Leaderboard**: Compare your ranking against other users.
-*   **Real-time Stats**: View platform-wide statistics (Active Learners, Quizzes Completed, Success Rate) on the home page.
-*   **Responsive Design**: Works seamlessly on desktop and mobile devices.
+---
 
-### Admin Features
-*   **Admin Dashboard**: Overview of platform statistics (Users, Quizzes, Success Rates).
-*   **Quiz Management**: Create, edit, and delete quizzes.
-*   **Question Bank**: Manage a pool of questions with various difficulty levels.
-*   **Theme Management**: Organize quizzes by categories/themes.
-*   **User Management**: View and manage registered users.
-*   **History & Analytics**: View global quiz history and export data.
+## Déploiement
 
-### Extensive Question Bank
-The platform comes seeded with quizzes covering a wide range of technologies:
-*   **Frontend**: HTML, CSS, JavaScript, React, Angular, Vue.js, Svelte, Next.js
-*   **Backend**: Node.js, Express.js, NestJS, Java, Spring Boot, Python, Django, Flask, FastAPI
-*   **Database**: SQL, MongoDB, PostgreSQL
-*   **DevOps**: Git, Docker, Kubernetes, CI/CD (GitHub Actions)
+Le projet est déployé et accessible aux adresses suivantes :
 
-## Tech Stack
+* **Frontend** : [https://quickquiz-app.onrender.com](https://quickquiz-app.onrender.com)
+* **API Backend** : [https://quickquiz-api.onrender.com](https://quickquiz-api.onrender.com)
+
+---
+
+## Fonctionnalités
+
+### Utilisateurs
+
+* **Authentification** : Système sécurisé de connexion et d'inscription
+* **Interface Quiz** : Quiz interactifs avec minuteur et suivi de progression
+* **Mode Pratique** : Amélioration des compétences sans pression de temps
+* **Tableau de bord** : Historique personnel et statistiques de performance
+* **Classement global** : Comparaison du classement entre tous les utilisateurs
+
+### Administration
+
+* **Tableau de bord Admin** : Aperçu des statistiques de la plateforme (utilisateurs, quiz, taux de réussite, etc)
+* **Gestion des quiz** : Créer, modifier et supprimer des quiz
+* **Gestion des questions** : Créer et Gérer les questions avec différents niveaux de difficulté
+* **Gestion des thèmes** : Organisation des quiz par catégories
+* **Gestion des utilisateurs** : Consultation et gestion des utilisateurs
+* **Historique et analyses** : Consultation de l'historique global et export des données
+
+### Banque de questions étendue
+
+La plateforme est livrée avec des quiz couvrant un large éventail de technologies :
+
+* **Frontend** : HTML, CSS, JavaScript, React, Angular, Vue.js, Svelte, Next.js
+* **Backend** : Node.js, Express.js, NestJS, Java, Spring Boot, Python, Django, Flask, FastAPI
+* **Bases de données** : SQL, MongoDB, PostgreSQL
+* **DevOps** : Git, Docker, Kubernetes, CI/CD
+
+---
+
+## Stack technique
 
 ### Frontend
-*   **React 19**: Modern UI library.
-*   **Vite**: Next-generation frontend tooling.
-*   **Tailwind CSS**: Utility-first CSS framework for styling.
-*   **Lucide React**: Beautiful & consistent icons.
-*   **Axios**: HTTP client for API requests.
+
+* **React 19** : Bibliothèque UI moderne
+* **Vite** : Outil de build et serveur de développement rapide
+* **Tailwind CSS** : Framework CSS utilitaire
+* **Lucide React** : Bibliothèque d’icônes
+* **Axios** : Client HTTP pour les requêtes API
 
 ### Backend
-*   **Node.js & Express**: Robust server-side runtime and framework.
-*   **MongoDB & Mongoose**: NoSQL database and object modeling.
-*   **JWT**: Secure authentication using JSON Web Tokens.
 
-### DevOps
-*   **Docker & Docker Compose**: Containerization and orchestration.
+* **Node.js & Express** : Environnement serveur et framework backend
+* **MongoDB & Mongoose** : Base de données NoSQL et modélisation des données
+* **JWT** : Authentification sécurisée via JSON Web Tokens
 
-## Prerequisites
+---
 
-*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
-*   **Git** for cloning the repository.
-
-## Getting Started (Docker)
-
-The easiest way to run the application is using Docker Compose.
-
-### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd QuickQuiz
-```
-
-### 2. Build and Run Containers
-This command will build the frontend and backend images and start the MongoDB container.
-
-```bash
-docker compose up -d --build
-```
-*   **Frontend**: Accessible at [http://localhost:5173](http://localhost:5173)
-*   **Backend API**: Accessible at [http://localhost:3000](http://localhost:3000)
-*   **MongoDB**: Running on port 27017
-
-### 3. Seed the Database (Important!)
-To populate the database with initial data (Admin user, Themes, Quizzes, Questions), you need to run the seeders.
-
-You can run them directly inside the backend container:
-
-**Create Admin User:**
-```bash
-docker exec -it quiz-app_backend node adminSeeder.js
-```
-*   **Default Admin Credentials:**
-    *   Email: `admin@quickquiz.com`
-    *   Password: `admin123`
-
-**Seed Quiz Data:**
-This will populate the database with thousands of questions across multiple topics.
-```bash
-docker exec -it quiz-app_backend node quizSeeder.js
-```
-*To reset the database (delete all quiz data), you can run:*
-```bash
-docker exec -it quiz-app_backend node quizSeeder.js -d
-```
-
-## Project Structure
+## Structure du projet
 
 ```
 QuickQuiz/
  ├── backend/                 # Node.js API
  │   ├── src/
- │   │   ├── config/          # DB configuration
- │   │   ├── controllers/     # Route logic
- │   │   ├── middlewares/     # Auth & Error handling
- │   │   ├── models/          # Mongoose schemas
- │   │   ├── routes/          # API routes
- │   │   └── utils/           # Helper functions
- │   ├── adminSeeder.js       # Script to create admin
- │   ├── quizSeeder.js        # Script to seed quizzes
- │   ├── server.js            # Entry point
- │   └── Dockerfile
- ├── frontend/                # React Application
- │   ├── src/
- │   │   ├── components/      # Reusable UI components
- │   │   ├── context/         # Auth context
- │   │   ├── pages/           # Application pages
- │   │   ├── services/        # API service calls
- │   │   └── routes/          # Routing configuration
- │   └── Dockerfile
+ │   │   ├── config/          # Configuration base de données
+ │   │   ├── controllers/     # Logique des routes
+ │   │   ├── middlewares/     # Authentification & gestion des erreurs
+ │   │   ├── models/          # Schémas Mongoose
+ │   │   ├── routes/          # Routes API
+ │   │   └── utils/           # Fonctions utilitaires
+ │   ├── adminSeeder.js       # Script de création d’admin
+ │   ├── quizSeeder.js        # Script de remplissage des quiz
+ │   ├── server.js            # Point d’entrée
+ |   ├── Dockerfile.dev       # Dockerfile Développement
+ │   └── Dockerfile           # Dockerfile Production
  │
- └── docker-compose.yml       # Docker orchestration
+ ├── frontend/                # Application React
+ │   ├── src/
+ │   │   ├── components/      # Composants UI
+ │   │   ├── context/         # Provider d’authentification
+ │   │   ├── pages/           # Pages (admin / user / auth)
+ │   │   ├── routes/          # Configuration du routeur
+ │   │   └── services/        # Couche service API
+ │   ├── nginx.conf           # Configuration Nginx Production
+ |   ├── Dockerfile.dev       # Dockerfile Développement
+ │   └── Dockerfile           # Dockerfile Production
+ │
+ ├── docker-compose.yml       # Orchestration Production
+ ├── docker-compose.dev.yml   # Orchestration Développement
+ └── generate-secret.js       # Générateur de JWT_SECRET
 ```
 
-## Environment Variables
+---
 
-The project comes with pre-configured environment variables in `docker-compose.yml` for development convenience.
+## Mise en route (Docker)
 
-**Backend:**
-*   `PORT`: 3000
-*   `MONGO_URI`: `mongodb://mongodb:27017/quiz_app`
-*   `JWT_SECRET`: (Defined in docker-compose)
+Lancez l'ensemble de la plateforme avec une seule commande.
 
-## Running Tests / Development
+### 1. Installation
 
-If you want to run the project locally without Docker (requires Node.js and MongoDB installed locally):
+```bash
+git clone https://github.com/Mo7amed-Boukab/QuickQuiz.git
+cd QuickQuiz
+cp .env.example .env
+```
 
-**Backend:**
+### 2. Lancer les containers
+
+```bash
+docker-compose up -d --build
+```
+
+* **Frontend** : [http://localhost](http://localhost)
+* **Backend API** : [http://localhost:3000](http://localhost:3000)
+* **MongoDB** : localhost:27017
+
+### 3. Seeder la base de données (important)
+
+**Créer l'utilisateur Admin :**
+
+```bash
+docker exec -it quickquiz-backend node adminSeeder.js
+```
+
+* **Admin par défaut** : [admin@quickquiz.com](mailto:admin@quickquiz.com) / admin123
+
+**Seeder les données de quiz :**
+
+```bash
+docker exec -it quickquiz-backend node quizSeeder.js
+```
+
+**Réinitialiser la base de données :**
+
+```bash
+docker exec -it quickquiz-backend node quizSeeder.js -d
+```
+
+---
+
+## Installation locale (sans Docker)
+
+Nécessite Node.js 20+ et MongoDB installés localement.
+
+### Backend
+
 ```bash
 cd backend
 npm install
-# Create a .env file with MONGO_URI and JWT_SECRET
 npm run dev
 ```
 
-**Frontend:**
+### Frontend
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-## License
+### Seeders
 
-This project is open source and available under the [MIT License](LICENSE).
+```bash
+cd backend
+node adminSeeder.js
+node quizSeeder.js
+```
+
+---
+
+## Variables d’environnement
+
+Modifiez le fichier `.env` pour configurer votre environnement :
+
+* `PORT` : Port du backend (défaut : 3000)
+* `MONGO_URI` : Chaîne de connexion MongoDB
+* `JWT_SECRET` : Secret JWT (généré avec `node generate-secret.js`)
+
+
+---
+
+## Licence
+Licence MIT - [LICENSE](LICENSE)
